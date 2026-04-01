@@ -61,9 +61,11 @@ export const editProduct = async (
       where: { productId },
       data: {
         ...(name !== undefined ? { name } : {}),
-        ...(price !== undefined ? { price } : {}),
-        ...(rating !== undefined ? { rating } : {}),
-        ...(stockQuantity !== undefined ? { stockQuantity } : {}),
+        ...(price !== undefined ? { price: Number(price) } : {}),
+        ...(rating !== undefined ? { rating: Number(rating) } : {}),
+        ...(stockQuantity !== undefined
+          ? { stockQuantity: Number(stockQuantity) }
+          : {}),
       },
     });
 
@@ -81,37 +83,42 @@ export const editProduct = async (
   }
 };
 
-// export const deleteProduct = async (
-//   req: Request,
-//   res: Response,
-// ): Promise<void> => {
-//   try {
-//     const { productId } = req.params;
+export const deleteProduct = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  try {
+    const productIdParam = req.params.productId;
+    if (!productIdParam || Array.isArray(productIdParam)) {
+      res.status(400).json({ message: 'Invalid productId' });
+      return;
+    }
+    const productId = productIdParam;
 
-//     await prisma.products.delete({
-//       where: { productId },
-//     });
+    await prisma.products.delete({
+      where: { productId },
+    });
 
-//     res.status(200).json({ message: 'Product deleted successfully' });
-//   } catch (error) {
-//     if (
-//       error instanceof Prisma.PrismaClientKnownRequestError &&
-//       error.code === 'P2025'
-//     ) {
-//       res.status(404).json({ message: 'Product not found' });
-//       return;
-//     }
+    res.status(200).json({ message: 'Product deleted successfully' });
+  } catch (error) {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === 'P2025'
+    ) {
+      res.status(404).json({ message: 'Product not found' });
+      return;
+    }
 
-//     if (
-//       error instanceof Prisma.PrismaClientKnownRequestError &&
-//       error.code === 'P2003'
-//     ) {
-//       res
-//         .status(409)
-//         .json({ message: 'Cannot delete product because it is in use' });
-//       return;
-//     }
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === 'P2003'
+    ) {
+      res
+        .status(409)
+        .json({ message: 'Cannot delete product because it is in use' });
+      return;
+    }
 
-//     res.status(500).json({ message: 'Error deleting product' });
-//   }
-// };
+    res.status(500).json({ message: 'Error deleting product' });
+  }
+};

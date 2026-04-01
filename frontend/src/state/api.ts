@@ -99,6 +99,13 @@ export const api = createApi({
       }),
       invalidatesTags: ['Products'],
     }),
+    deleteProduct: build.mutation<{ message: string }, string>({
+      query: (productId) => ({
+        url: `/products/${productId}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Products'],
+    }),
     getUsers: build.query<User[], void>({
       query: () => '/users',
       providesTags: ['Users'],
@@ -115,6 +122,7 @@ export const {
   useGetProductsQuery,
   useCreateProductMutation,
   useUpdateProductMutation,
+  useDeleteProductMutation,
   useGetUsersQuery,
   useGetExpensesByCategoryQuery,
 } = api;

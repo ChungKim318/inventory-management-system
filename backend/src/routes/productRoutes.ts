@@ -3,7 +3,7 @@ import {
   createProduct,
   editProduct,
   getProducts,
-  // deleteProduct,
+  deleteProduct,
 } from '../controllers/productController';
 
 const router = Router();
@@ -11,6 +11,6 @@ const router = Router();
 router.get('/', getProducts);
 router.post('/', createProduct);
 router.put('/:productId', editProduct);
-// router.delete('/:productId', deleteProduct);
+router.delete('/:productId', deleteProduct);
 
 export default router;

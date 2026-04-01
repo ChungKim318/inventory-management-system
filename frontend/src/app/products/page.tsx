@@ -4,13 +4,15 @@ import Header from '@/components/Header';
 import Rating from '@/components/Rating';
 import {
   useCreateProductMutation,
+  useDeleteProductMutation,
   useGetProductsQuery,
   useUpdateProductMutation,
 } from '@/state/api';
 import type { Product } from '@/state/api';
-import { PlusCircleIcon, SearchIcon, SquarePen } from 'lucide-react';
+import { PlusCircleIcon, SearchIcon, SquarePen, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import React, { useState } from 'react';
+import { toast } from 'sonner';
 import CreateProductModal from './CreateProductModal';
 import EditProductModal from './EditProductModal';
 
@@ -35,6 +37,7 @@ const Product = () => {
 
   const [createProduct] = useCreateProductMutation();
   const [updateProduct] = useUpdateProductMutation();
+  const [deleteProduct] = useDeleteProductMutation();
   const handleCreateProduct = async (productData: ProductFormData) => {
     await createProduct(productData);
   };
@@ -52,6 +55,27 @@ const Product = () => {
       ...productData,
     }).unwrap();
     await refetch();
+  };
+
+  const handleDeleteProduct = (product: Product) => {
+    toast(`Bạn có chắc muốn xóa "${product.name}"?`, {
+      action: {
+        label: 'Xóa',
+        onClick: async () => {
+          try {
+            await deleteProduct(product.productId).unwrap();
+            await refetch();
+            toast.success('Đã xóa sản phẩm');
+          } catch {
+            toast.error('Xóa sản phẩm thất bại');
+          }
+        },
+      },
+      cancel: {
+        label: 'Hủy',
+        onClick: () => {},
+      },
+    });
   };
 
   if (isLoading) {
@@ -101,12 +125,18 @@ const Product = () => {
             <div
               key={product?.productId}
               className='relative border shadow rounded-md p-4 max-w-full w-full mx-auto'>
-              <button
-                onClick={() => handleOpenEditModal(product)}
-                className='absolute top-3 right-3'
-                aria-label={`Edit ${product.name}`}>
-                <SquarePen className='w-7 h-7 text-blue-500' />
-              </button>
+              <div className='absolute top-3 right-3 flex items-center gap-2'>
+                <button
+                  onClick={() => handleOpenEditModal(product)}
+                  aria-label={`Edit ${product.name}`}>
+                  <SquarePen className='w-7 h-7 text-blue-500' />
+                </button>
+                <button
+                  onClick={() => handleDeleteProduct(product)}
+                  aria-label={`Delete ${product.name}`}>
+                  <Trash2 className='w-7 h-7 text-red-500' />
+                </button>
+              </div>
               <div className='flex flex-col items-center'>
                 <Image
                   src={`https://picsum.photos/id/${index + 1}/150`}
