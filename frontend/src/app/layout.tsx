@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { manrope } from '@/utils/fonts';
-import DashboardWrapper from '@/dashboard/dashboardWrapper';
+import DashboardWrapper from '@/app/dashboardWrapper';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
