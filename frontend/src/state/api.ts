@@ -15,6 +15,14 @@ export interface NewProduct {
   stockQuantity: number;
 }
 
+export interface UpdateProductPayload {
+  productId: string;
+  name: string;
+  price: number;
+  rating?: number;
+  stockQuantity: number;
+}
+
 export interface SalesSummary {
   salesSummaryId: string;
   totalValue: number;
@@ -83,6 +91,14 @@ export const api = createApi({
       }),
       invalidatesTags: ['Products'],
     }),
+    updateProduct: build.mutation<Product, UpdateProductPayload>({
+      query: ({ productId, ...productData }) => ({
+        url: `/products/${productId}`,
+        method: 'PUT',
+        body: productData,
+      }),
+      invalidatesTags: ['Products'],
+    }),
     getUsers: build.query<User[], void>({
       query: () => '/users',
       providesTags: ['Users'],
@@ -98,6 +114,7 @@ export const {
   useGetDashboardMetricsQuery,
   useGetProductsQuery,
   useCreateProductMutation,
+  useUpdateProductMutation,
   useGetUsersQuery,
   useGetExpensesByCategoryQuery,
 } = api;

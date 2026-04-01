@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -42,3 +42,76 @@ export const createProduct = async (
     res.status(500).json({ message: 'Error creating product' });
   }
 };
+
+export const editProduct = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  try {
+    const productIdParam = req.params.productId;
+    const { name, price, rating, stockQuantity } = req.body;
+
+    if (!productIdParam || Array.isArray(productIdParam)) {
+      res.status(400).json({ message: 'Invalid productId' });
+      return;
+    }
+
+    const productId = productIdParam;
+    const updatedProduct = await prisma.products.update({
+      where: { productId },
+      data: {
+        ...(name !== undefined ? { name } : {}),
+        ...(price !== undefined ? { price } : {}),
+        ...(rating !== undefined ? { rating } : {}),
+        ...(stockQuantity !== undefined ? { stockQuantity } : {}),
+      },
+    });
+
+    res.json(updatedProduct);
+  } catch (error) {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === 'P2025'
+    ) {
+      res.status(404).json({ message: 'Product not found' });
+      return;
+    }
+
+    res.status(500).json({ message: 'Error updating product' });
+  }
+};
+
+// export const deleteProduct = async (
+//   req: Request,
+//   res: Response,
+// ): Promise<void> => {
+//   try {
+//     const { productId } = req.params;
+
+//     await prisma.products.delete({
+//       where: { productId },
+//     });
+
+//     res.status(200).json({ message: 'Product deleted successfully' });
+//   } catch (error) {
+//     if (
+//       error instanceof Prisma.PrismaClientKnownRequestError &&
+//       error.code === 'P2025'
+//     ) {
+//       res.status(404).json({ message: 'Product not found' });
+//       return;
+//     }
+
+//     if (
+//       error instanceof Prisma.PrismaClientKnownRequestError &&
+//       error.code === 'P2003'
+//     ) {
+//       res
+//         .status(409)
+//         .json({ message: 'Cannot delete product because it is in use' });
+//       return;
+//     }
+
+//     res.status(500).json({ message: 'Error deleting product' });
+//   }
+// };
