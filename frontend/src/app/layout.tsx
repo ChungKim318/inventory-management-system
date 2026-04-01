@@ -15,8 +15,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en' className={manrope.variable}>
-      <body className='min-h-full flex flex-col'>
-        <time dateTime='2026-03-25' suppressHydrationWarning />
+      <body className='flex flex-col min-h-full'>
         <DashboardWrapper>{children}</DashboardWrapper>
       </body>
     </html>

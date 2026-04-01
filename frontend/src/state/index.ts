@@ -5,14 +5,14 @@ export interface InitialStateTypes {
   isDarkMode: boolean;
 }
 
-const inititalState: InitialStateTypes = {
+const initialState: InitialStateTypes = {
   isSidebarCollapsed: false,
   isDarkMode: false,
 };
 
 export const globalSlice = createSlice({
   name: 'global',
-  initialState: inititalState,
+  initialState: initialState,
   reducers: {
     setIsSidebarCollapsed: (state, action: PayloadAction<boolean>) => {
       state.isSidebarCollapsed = action.payload;
