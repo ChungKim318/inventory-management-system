@@ -86,15 +86,15 @@ const SideBar = () => {
           isCollapsed={isSidebarCollapsed}
         />
         <SidebarLinks
-          href='/inventory'
-          icon={Archive}
-          label='Inventory'
-          isCollapsed={isSidebarCollapsed}
-        />
-        <SidebarLinks
           href='/products'
           icon={Clipboard}
           label='Products'
+          isCollapsed={isSidebarCollapsed}
+        />
+        <SidebarLinks
+          href='/inventory'
+          icon={Archive}
+          label='Inventory'
           isCollapsed={isSidebarCollapsed}
         />
         <SidebarLinks

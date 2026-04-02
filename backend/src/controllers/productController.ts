@@ -3,6 +3,18 @@ import { Prisma, PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
+const parseOptionalNumber = (value: unknown): number | undefined => {
+  if (value === null || value === undefined || value === '') return undefined;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : undefined;
+};
+
+const parseOptionalDate = (value: unknown): Date | undefined => {
+  if (value === null || value === undefined || value === '') return undefined;
+  const date = new Date(String(value));
+  return Number.isNaN(date.getTime()) ? undefined : date;
+};
+
 export const getProducts = async (
   req: Request,
   res: Response,
@@ -27,15 +39,74 @@ export const createProduct = async (
   res: Response,
 ): Promise<void> => {
   try {
-    const { productId, name, price, rating, stockQuantity } = req.body;
+    const {
+      productId,
+      name,
+      price,
+      rating,
+      stockQuantity,
+      shippedQuantity,
+      imageUrl,
+      unitOfMeasure,
+      dateStocked,
+      dateShipped,
+      unitPrice,
+      totalPrice,
+    } = req.body;
+
+    if (!productId || !name) {
+      res.status(400).json({ message: 'productId and name are required' });
+      return;
+    }
+
+    const parsedPrice = parseOptionalNumber(price);
+    const parsedStockQuantity = parseOptionalNumber(stockQuantity);
+    const parsedShippedQuantity = parseOptionalNumber(shippedQuantity);
+
+    if (parsedPrice === undefined || parsedStockQuantity === undefined) {
+      res.status(400).json({ message: 'price and stockQuantity must be number' });
+      return;
+    }
+
+    const createData: Prisma.ProductsCreateInput = {
+      productId: String(productId),
+      name: String(name),
+      price: parsedPrice,
+      stockQuantity: Math.trunc(parsedStockQuantity),
+      shippedQuantity:
+        parsedShippedQuantity !== undefined
+          ? Math.trunc(parsedShippedQuantity)
+          : 0,
+    };
+
+    if (rating !== undefined && rating !== null && rating !== '') {
+      createData.rating = String(rating);
+    }
+    if (imageUrl !== undefined && imageUrl !== null && imageUrl !== '') {
+      createData.imageUrl = String(imageUrl);
+    }
+    if (
+      unitOfMeasure !== undefined &&
+      unitOfMeasure !== null &&
+      unitOfMeasure !== ''
+    ) {
+      createData.unitOfMeasure = String(unitOfMeasure);
+    }
+
+    const parsedDateStocked = parseOptionalDate(dateStocked);
+    if (parsedDateStocked) createData.dateStocked = parsedDateStocked;
+
+    const parsedDateShipped = parseOptionalDate(dateShipped);
+    if (parsedDateShipped) createData.dateShipped = parsedDateShipped;
+
+    const parsedUnitPrice = parseOptionalNumber(unitPrice);
+    if (parsedUnitPrice !== undefined) createData.unitPrice = parsedUnitPrice;
+
+    const parsedTotalPrice = parseOptionalNumber(totalPrice);
+    if (parsedTotalPrice !== undefined) createData.totalPrice = parsedTotalPrice;
+
     const product = await prisma.products.create({
-      data: {
-        productId,
-        name,
-        price,
-        rating,
-        stockQuantity,
-      },
+      data: createData,
     });
     res.status(201).json(product);
   } catch (error) {
@@ -49,7 +120,19 @@ export const editProduct = async (
 ): Promise<void> => {
   try {
     const productIdParam = req.params.productId;
-    const { name, price, rating, stockQuantity } = req.body;
+    const {
+      name,
+      price,
+      rating,
+      stockQuantity,
+      shippedQuantity,
+      imageUrl,
+      unitOfMeasure,
+      dateStocked,
+      dateShipped,
+      unitPrice,
+      totalPrice,
+    } = req.body;
 
     if (!productIdParam || Array.isArray(productIdParam)) {
       res.status(400).json({ message: 'Invalid productId' });
@@ -57,16 +140,55 @@ export const editProduct = async (
     }
 
     const productId = productIdParam;
+    const updateData: Prisma.ProductsUpdateInput = {};
+
+    if (name !== undefined) updateData.name = String(name);
+    if (price !== undefined) updateData.price = Number(price);
+    if (rating !== undefined) updateData.rating = rating ? String(rating) : null;
+    if (stockQuantity !== undefined) {
+      const parsedStockQuantity = Math.trunc(Number(stockQuantity));
+      if (parsedStockQuantity < 0) {
+        res
+          .status(400)
+          .json({ message: 'stockQuantity cannot be less than 0' });
+        return;
+      }
+      updateData.stockQuantity = parsedStockQuantity;
+    }
+    if (shippedQuantity !== undefined) {
+      const parsedShippedQuantity = Math.trunc(Number(shippedQuantity));
+      if (parsedShippedQuantity < 0) {
+        res
+          .status(400)
+          .json({ message: 'shippedQuantity cannot be less than 0' });
+        return;
+      }
+      updateData.shippedQuantity = parsedShippedQuantity;
+    }
+    if (imageUrl !== undefined) {
+      updateData.imageUrl = imageUrl ? String(imageUrl) : null;
+    }
+    if (unitOfMeasure !== undefined) {
+      updateData.unitOfMeasure = unitOfMeasure ? String(unitOfMeasure) : null;
+    }
+    if (dateStocked !== undefined) {
+      updateData.dateStocked = parseOptionalDate(dateStocked) ?? null;
+    }
+    if (dateShipped !== undefined) {
+      updateData.dateShipped = parseOptionalDate(dateShipped) ?? null;
+    }
+    if (unitPrice !== undefined) {
+      const parsed = parseOptionalNumber(unitPrice);
+      updateData.unitPrice = parsed ?? null;
+    }
+    if (totalPrice !== undefined) {
+      const parsed = parseOptionalNumber(totalPrice);
+      updateData.totalPrice = parsed ?? null;
+    }
+
     const updatedProduct = await prisma.products.update({
       where: { productId },
-      data: {
-        ...(name !== undefined ? { name } : {}),
-        ...(price !== undefined ? { price: Number(price) } : {}),
-        ...(rating !== undefined ? { rating: Number(rating) } : {}),
-        ...(stockQuantity !== undefined
-          ? { stockQuantity: Number(stockQuantity) }
-          : {}),
-      },
+      data: updateData,
     });
 
     res.json(updatedProduct);

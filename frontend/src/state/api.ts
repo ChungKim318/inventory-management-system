@@ -4,23 +4,45 @@ export interface Product {
   productId: string;
   name: string;
   price: number;
-  rating?: number;
+  rating?: string;
   stockQuantity: number;
+  shippedQuantity?: number;
+  imageUrl?: string;
+  unitOfMeasure?: string;
+  dateStocked?: string;
+  dateShipped?: string;
+  unitPrice?: number;
+  totalPrice?: number;
 }
 
 export interface NewProduct {
+  productId: string;
   name: string;
   price: number;
-  rating?: number;
+  rating?: string;
   stockQuantity: number;
+  shippedQuantity?: number;
+  imageUrl?: string;
+  unitOfMeasure?: string;
+  dateStocked?: string;
+  dateShipped?: string;
+  unitPrice?: number;
+  totalPrice?: number;
 }
 
 export interface UpdateProductPayload {
   productId: string;
   name: string;
   price: number;
-  rating?: number;
+  rating?: string;
   stockQuantity: number;
+  shippedQuantity?: number;
+  imageUrl?: string;
+  unitOfMeasure?: string;
+  dateStocked?: string;
+  dateShipped?: string;
+  unitPrice?: number;
+  totalPrice?: number;
 }
 
 export interface SalesSummary {
@@ -50,7 +72,14 @@ export interface ExpenseByCategorySummary {
   date: string;
 }
 
+export interface InventorySummary {
+  totalImportedQuantity: number;
+  totalShippedQuantity: number;
+  totalStockQuantity: number;
+}
+
 export interface DashboardMetrics {
+  inventorySummary: InventorySummary;
   popularProducts: Product[];
   salesSummary: SalesSummary[];
   purchaseSummary: PurchaseSummary[];

@@ -51,6 +51,9 @@ async function main() {
     }
 
     for (const data of jsonData) {
+      if (modelName === 'products' && typeof data.rating === 'number') {
+        data.rating = String(data.rating);
+      }
       await model.create({
         data,
       });

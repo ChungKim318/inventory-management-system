@@ -58,7 +58,6 @@ const CardExpensesSummary = () => {
           </div>
 
           {/* BODY */}
-          {/* BODY */}
           <div className='justify-between xl:flex pr-7'>
             {/* CHART */}
             <div className='relative basis-3/5'>

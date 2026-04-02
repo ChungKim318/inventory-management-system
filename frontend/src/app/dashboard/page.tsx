@@ -12,15 +12,17 @@ import CardSalesSummary from './CardSalesSummary';
 import CardPurchaseSummary from './CardPurchaseSummary';
 import CardExpensesSummary from './CardExpensesSummary';
 import StatCard from './StatCard';
+import CardInventorySummary from './CardInventorySummary';
 
 const Dashboard = () => {
   return (
-    <div className='grid grid-cols-1 gap-10 pb-4 md:grid-cols-2 xl:grid-cols-3 xl:overflow-auto custom-grid-rows'>
-      <CardPopularProducts />
-      <CardSalesSummary />
-      <CardPurchaseSummary />
-      <CardExpensesSummary />
-      <StatCard
+    <div className='gap-10 pb-4 md:grid-cols-2 xl:grid-cols-3 xl:overflow-auto custom-grid-rows'>
+      {/* <CardPopularProducts /> */}
+      <CardInventorySummary />
+      {/* <CardSalesSummary /> */}
+      {/* <CardPurchaseSummary /> */}
+      {/* <CardExpensesSummary /> */}
+      {/* <StatCard
         title='Customer & Expenses'
         primaryIcon={<Package className='w-6 h-6 text-blue-600' />}
         dateRange='22 - 29 October 2023'
@@ -76,7 +78,7 @@ const Dashboard = () => {
             IconComponent: TrendingDown,
           },
         ]}
-      />
+      /> */}
     </div>
   );
 };

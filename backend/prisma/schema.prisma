@@ -24,8 +24,15 @@ model Products {
   productId     String      @id
   name          String
   price         Float
-  rating        Float?
+  rating        String?
   stockQuantity Int
+  shippedQuantity Int       @default(0)
+  imageUrl      String?
+  unitOfMeasure String?
+  dateStocked   DateTime?
+  dateShipped   DateTime?
+  unitPrice     Float?
+  totalPrice    Float?
   Sales         Sales[]
   Purchases     Purchases[]
 }

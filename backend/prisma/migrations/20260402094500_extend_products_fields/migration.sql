@@ -1,0 +1,10 @@
+ALTER TABLE "Products"
+ALTER COLUMN "rating" TYPE TEXT USING "rating"::TEXT;
+
+ALTER TABLE "Products"
+ADD COLUMN "imageUrl" TEXT,
+ADD COLUMN "unitOfMeasure" TEXT,
+ADD COLUMN "dateStocked" TIMESTAMP(3),
+ADD COLUMN "dateShipped" TIMESTAMP(3),
+ADD COLUMN "unitPrice" DOUBLE PRECISION,
+ADD COLUMN "totalPrice" DOUBLE PRECISION;

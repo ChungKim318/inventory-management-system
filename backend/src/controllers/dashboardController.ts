@@ -8,6 +8,17 @@ export const getDashboardMetrics = async (
   res: Response,
 ): Promise<void> => {
   try {
+    const inventoryTotals = await prisma.products.aggregate({
+      _sum: {
+        stockQuantity: true,
+        shippedQuantity: true,
+      },
+    });
+
+    const totalStockQuantity = inventoryTotals._sum.stockQuantity ?? 0;
+    const totalShippedQuantity = inventoryTotals._sum.shippedQuantity ?? 0;
+    const totalImportedQuantity = totalStockQuantity + totalShippedQuantity;
+
     const popularProducts = await prisma.products.findMany({
       take: 15,
       orderBy: {
@@ -48,6 +59,11 @@ export const getDashboardMetrics = async (
     );
 
     res.json({
+      inventorySummary: {
+        totalImportedQuantity,
+        totalShippedQuantity,
+        totalStockQuantity,
+      },
       popularProducts,
       salesSummary,
       purchaseSummary,

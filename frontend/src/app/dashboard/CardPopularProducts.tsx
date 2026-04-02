@@ -1,11 +1,11 @@
-import Rating from '@/components/Rating';
 import { useGetDashboardMetricsQuery } from '@/state/api';
 import { ShoppingBag } from 'lucide-react';
-import Image from 'next/image';
 import React from 'react';
 
 const CardPopularProducts = () => {
   const { data: dashboardMetrics, isLoading } = useGetDashboardMetricsQuery();
+  const formatVnd = (value: number) =>
+    `${new Intl.NumberFormat('vi-VN').format(value)} VNĐ`;
   return (
     <div className='row-span-3 pb-16 bg-white shadow-md xl:row-span-6 rounded-2xl'>
       {isLoading ? (
@@ -22,12 +22,11 @@ const CardPopularProducts = () => {
                 key={product.productId}
                 className='flex items-center justify-between gap-3 px-5 border-b py-7'>
                 <div className='flex items-center gap-3'>
-                  <Image
-                    src={`https://picsum.photos/200`}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={product.imageUrl || 'https://picsum.photos/200'}
                     alt={product?.name}
-                    width={50}
-                    height={50}
-                    className='rounded-lg w-14 h-14'
+                    className='rounded-lg w-14 h-14 object-cover'
                   />
                   <div className='flex flex-col justify-between gap-1'>
                     <div className='font-bold text-gray-700'>
@@ -35,10 +34,12 @@ const CardPopularProducts = () => {
                     </div>
                     <div className='flex items-center text-sm'>
                       <span className='text-xs font-bold text-blue-500'>
-                        {product?.price.toFixed(3)} VNĐ
+                        {formatVnd(product?.unitPrice ?? product?.price)}
                       </span>
                       <span className='mx-2'>|</span>
-                      <Rating rating={product?.rating || 0} />
+                      <span className='text-xs text-gray-600'>
+                        {product?.rating || 'N/A'}
+                      </span>
                     </div>
                   </div>
                 </div>

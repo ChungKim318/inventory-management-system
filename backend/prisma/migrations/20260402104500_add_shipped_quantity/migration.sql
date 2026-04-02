@@ -1,0 +1,2 @@
+ALTER TABLE "Products"
+ADD COLUMN "shippedQuantity" INTEGER NOT NULL DEFAULT 0;
