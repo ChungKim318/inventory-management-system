@@ -109,15 +109,15 @@ const CardInventorySummary = () => {
   if (isError || !productsData) {
     return (
       <div className='text-center text-red-500 py-4 bg-white shadow rounded-lg'>
-        Failed to fetch inventory data
+        Không thể truy xuất dữ liệu
       </div>
     );
   }
 
   return (
-    <div className='row-span-3 bg-white shadow rounded-lg p-4 md:p-6'>
+    <div className='row-span-3 bg-white shadow rounded-lg p-4 md:p-6 h-fit'>
       <div className='mb-4'>
-        <h3 className='text-lg font-semibold'>Inventory Summary</h3>
+        <h3 className='text-lg font-semibold'>Tổng hàng hoá xuất nhập</h3>
         <p className='text-sm text-gray-500'>
           Theo dõi số lượng nhập kho, xuất kho và tồn kho sản phẩm.
         </p>
@@ -135,7 +135,7 @@ const CardInventorySummary = () => {
               className={classNames.selectInput}
               value={selectedType}
               onChange={(e) => setSelectedType(e.target.value)}>
-              <option value='All'>All</option>
+              <option value='All'>Tất cả</option>
               <option value='Nhập kho'>Nhập kho</option>
               <option value='Xuất kho'>Xuất kho</option>
               <option value='Tồn kho'>Tồn kho</option>
@@ -144,7 +144,7 @@ const CardInventorySummary = () => {
 
           <div>
             <label htmlFor='inventory-start-date' className={classNames.label}>
-              Start Date
+              Ngày bắt đầu
             </label>
             <input
               type='date'
@@ -157,7 +157,7 @@ const CardInventorySummary = () => {
 
           <div>
             <label htmlFor='inventory-end-date' className={classNames.label}>
-              End Date
+              Ngày kết thúc
             </label>
             <input
               type='date'

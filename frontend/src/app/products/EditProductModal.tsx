@@ -138,7 +138,7 @@ const EditProductModal = ({
     <div className='fixed inset-0 z-20 w-full h-full overflow-y-auto bg-black/40 bg-opacity-50 backdrop-blur-sm'>
       <div className='relative p-5 mx-auto bg-white border rounded-md shadow-lg top-8 w-140 max-w-[95vw]'>
         <div className='flex justify-between items-center'>
-          <Header name='Edit Product' />
+          <Header name='Cập nhật sản phẩm' />
           <div className='flex items-center'>
             <p className='text-2xl font-semibold'>Tồn sau xuất:&nbsp;</p>
             <span className='text-2xl font-semibold text-blue-600'>
@@ -157,6 +157,7 @@ const EditProductModal = ({
               value={formData.productId}
               className={`${inputCssStyles} bg-gray-100`}
               readOnly
+              autoComplete='off'
             />
           </div>
 
@@ -171,6 +172,7 @@ const EditProductModal = ({
               value={formData.name}
               className={inputCssStyles}
               required
+              autoComplete='off'
             />
           </div>
 
@@ -186,6 +188,7 @@ const EditProductModal = ({
               value={shipQuantity}
               className={inputCssStyles}
               required
+              autoComplete='off'
             />
             {/* <p className='-mt-1 mb-2 text-xs text-gray-500'>
               Tồn sau xuất: {remainingStock < 0 ? 0 : remainingStock}
@@ -202,6 +205,7 @@ const EditProductModal = ({
               onChange={handleChange}
               value={formData.unitOfMeasure}
               className={inputCssStyles}
+              autoComplete='off'
             />
           </div>
 
@@ -216,6 +220,7 @@ const EditProductModal = ({
               value={unitPriceDisplay}
               className={inputCssStyles}
               required
+              autoComplete='off'
             />
           </div>
 
@@ -268,6 +273,7 @@ const EditProductModal = ({
               onChange={handleChange}
               value={formData.rating}
               className={inputCssStyles}
+              autoComplete='off'
             />
           </div>
 
@@ -281,6 +287,7 @@ const EditProductModal = ({
               onChange={handleChange}
               value={formData.imageUrl}
               className={inputCssStyles}
+              autoComplete='off'
             />
           </div>
 
@@ -288,13 +295,13 @@ const EditProductModal = ({
             <button
               type='submit'
               className='px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700'>
-              Save
+              Cập nhật
             </button>
             <button
               onClick={onClose}
               type='button'
               className='ml-2 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-700'>
-              Cancel
+              Huỷ
             </button>
           </div>
         </form>

@@ -14,24 +14,24 @@ import React, { ChangeEvent, useMemo, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
 const columns: GridColDef[] = [
-  { field: 'productId', headerName: 'ID', width: 90 },
-  { field: 'name', headerName: 'Name', width: 170 },
+  { field: 'productId', headerName: 'Mã sản phẩm', width: 100 },
+  { field: 'name', headerName: 'Tên sản phẩm', width: 170 },
   {
     field: 'price',
-    headerName: 'Price',
+    headerName: 'Tổng giá trị',
     width: 120,
     valueGetter: (value, row) =>
-      `${new Intl.NumberFormat('vi-VN').format(row.unitPrice ?? row.price)} VNĐ`,
+      `${new Intl.NumberFormat('vi-VN').format(row.totalPrice ?? row.totalPrice)} VNĐ`,
   },
   {
     field: 'unitOfMeasure',
-    headerName: 'Unit of Measure',
+    headerName: 'Đơn vị tính',
     width: 100,
     valueGetter: (value, row) => row.unitOfMeasure || 'N/A',
   },
   {
     field: 'dateStocked',
-    headerName: 'Date Stocked',
+    headerName: 'Ngày nhập kho',
     width: 130,
     valueGetter: (value, row) =>
       row.dateStocked
@@ -40,7 +40,7 @@ const columns: GridColDef[] = [
   },
   {
     field: 'dateShipped',
-    headerName: 'Date Shipped',
+    headerName: 'Ngày xuất kho',
     width: 130,
     valueGetter: (value, row) =>
       row.dateShipped
@@ -49,28 +49,28 @@ const columns: GridColDef[] = [
   },
   {
     field: 'unitPrice',
-    headerName: 'Unit Price',
+    headerName: 'Giá một đơn vị',
     width: 150,
     valueGetter: (value, row) =>
       `${new Intl.NumberFormat('vi-VN').format(row.unitPrice)} VNĐ`,
   },
   {
     field: 'stockQuantity',
-    headerName: 'Stock Quantity',
+    headerName: 'Số lượng tồn kho',
     width: 150,
     valueGetter: (value, row) =>
       row.stockQuantity ? row.stockQuantity.toLocaleString() : 'N/A',
   },
   {
     field: 'stockShipped',
-    headerName: 'Stock Shipped',
+    headerName: 'Số lượng xuất kho',
     width: 150,
     valueGetter: (value, row) =>
-      row.stockShipped ? row.stockShipped.toLocaleString() : 'N/A',
+      row.shippedQuantity ? row.shippedQuantity.toLocaleString() : 'N/A',
   },
   {
     field: 'rating',
-    headerName: 'Rating',
+    headerName: 'Đánh giá',
     width: 140,
     valueGetter: (value, row) => row.rating || 'N/A',
   },
@@ -79,7 +79,33 @@ const columns: GridColDef[] = [
 const parseNumber = (value: unknown) => {
   if (typeof value === 'number' && Number.isFinite(value)) return value;
   if (typeof value === 'string') {
-    const normalized = value.replace(/,/g, '').trim();
+    let normalized = value.trim();
+    if (!normalized) return NaN;
+
+    normalized = normalized
+      .replace(/vnđ|vnd|đ/gi, '')
+      .replace(/\s/g, '');
+
+    if (normalized.includes('.') && normalized.includes(',')) {
+      if (normalized.lastIndexOf(',') > normalized.lastIndexOf('.')) {
+        normalized = normalized.replace(/\./g, '').replace(',', '.');
+      } else {
+        normalized = normalized.replace(/,/g, '');
+      }
+    } else if (normalized.includes('.')) {
+      const parts = normalized.split('.');
+      if (parts.length > 1 && parts[parts.length - 1].length === 3) {
+        normalized = normalized.replace(/\./g, '');
+      }
+    } else if (normalized.includes(',')) {
+      const parts = normalized.split(',');
+      if (parts.length > 1 && parts[parts.length - 1].length === 3) {
+        normalized = normalized.replace(/,/g, '');
+      } else {
+        normalized = normalized.replace(',', '.');
+      }
+    }
+
     const parsed = Number(normalized);
     if (Number.isFinite(parsed)) return parsed;
   }
@@ -89,9 +115,24 @@ const parseNumber = (value: unknown) => {
 const normalizeKey = (key: string) =>
   key
     .normalize('NFD')
+    .replace(/đ/g, 'd')
+    .replace(/Đ/g, 'D')
     .replace(/[\u0300-\u036f]/g, '')
     .replace(/[^a-zA-Z0-9]/g, '')
     .toLowerCase();
+
+const EXCEL_HEADERS = [
+  'STT',
+  'Mã sản phẩm',
+  'Tên sản phẩm',
+  'Đơn giá',
+  'Đánh giá',
+  'Số lượng tồn',
+  'Đơn vị tính',
+  'Ngày nhập kho',
+  'Ngày xuất kho',
+  'Tổng giá trị',
+] as const;
 
 const getCellValue = (
   row: Record<string, unknown>,
@@ -159,31 +200,65 @@ const Inventory = () => {
             )
           : products;
 
-      const exportData = productsToExport.map((product, index) => ({
-        STT: index + 1,
-        productId: product.productId,
-        name: product.name,
-        price: product.price,
-        rating: product.rating ?? '',
-        stockQuantity: product.stockQuantity,
-        unitOfMeasure: product.unitOfMeasure ?? '',
-        dateStocked: product.dateStocked
-          ? new Date(product.dateStocked).toISOString().slice(0, 10)
-          : '',
-        dateShipped: product.dateShipped
-          ? new Date(product.dateShipped).toISOString().slice(0, 10)
-          : '',
-        unitPrice: product.unitPrice ?? product.price,
-        totalPrice:
-          product.totalPrice ??
-          (product.unitPrice ?? product.price) * product.stockQuantity,
-      }));
+      const exportRows = productsToExport.map((product, index) => {
+        const normalizedUnitPrice = product.unitPrice ?? product.price;
+        return [
+          index + 1,
+          product.productId,
+          product.name,
+          normalizedUnitPrice,
+          product.rating ?? '',
+          product.stockQuantity,
+          product.unitOfMeasure ?? '',
+          product.dateStocked
+            ? new Date(product.dateStocked).toISOString().slice(0, 10)
+            : '',
+          product.dateShipped
+            ? new Date(product.dateShipped).toISOString().slice(0, 10)
+            : '',
+          product.totalPrice ?? normalizedUnitPrice * product.stockQuantity,
+        ];
+      });
 
-      const worksheet = XLSX.utils.json_to_sheet(exportData);
+      const worksheet = XLSX.utils.aoa_to_sheet([
+        [...EXCEL_HEADERS],
+        ...exportRows,
+      ]);
+      worksheet['!cols'] = [
+        { wch: 8 },
+        { wch: 20 },
+        { wch: 24 },
+        { wch: 14 },
+        { wch: 12 },
+        { wch: 14 },
+        { wch: 14 },
+        { wch: 14 },
+        { wch: 14 },
+        { wch: 16 },
+      ];
+
+      // Tô nền dòng tiêu đề để phân cách với dữ liệu
+      EXCEL_HEADERS.forEach((_, index) => {
+        const cellRef = XLSX.utils.encode_cell({ r: 0, c: index });
+        if (!worksheet[cellRef]) return;
+        worksheet[cellRef].s = {
+          fill: {
+            patternType: 'solid',
+            fgColor: { rgb: 'D9E1F2' },
+          },
+          font: {
+            bold: true,
+          },
+        };
+      });
       const workbook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workbook, worksheet, 'Inventory');
 
-      const output = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+      const output = XLSX.write(workbook, {
+        bookType: 'xlsx',
+        type: 'array',
+        cellStyles: true,
+      });
       const blob = new Blob([output], {
         type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       });
@@ -236,11 +311,24 @@ const Inventory = () => {
         const name = String(
           getCellValue(row, ['name', 'productName', 'tenSanPham']) ?? '',
         ).trim();
-        const price = parseNumber(
-          getCellValue(row, ['price', 'gia', 'unitPrice']),
+        const unitPrice = parseNumber(
+          getCellValue(row, [
+            'unitPrice',
+            'price',
+            'gia',
+            'donGia',
+            'dongia',
+            'donGia1DonVi',
+          ]),
         );
         const stockQuantity = parseNumber(
-          getCellValue(row, ['stockQuantity', 'stock', 'quantity', 'tonKho']),
+          getCellValue(row, [
+            'stockQuantity',
+            'stock',
+            'quantity',
+            'tonKho',
+            'soLuongTon',
+          ]),
         );
         const rating = String(
           getCellValue(row, ['rating', 'danhGia']) ?? '',
@@ -257,23 +345,34 @@ const Inventory = () => {
         const dateShipped = String(
           getCellValue(row, ['dateShipped', 'ngayXuatKho']) ?? '',
         ).trim();
-        const unitPrice = parseNumber(
-          getCellValue(row, ['unitPrice', 'donGia1DonVi']),
-        );
-        const totalPrice = parseNumber(
-          getCellValue(row, ['totalPrice', 'tongDonGia']),
-        );
+        const totalPriceRaw = getCellValue(row, [
+          'totalPrice',
+          'tongDonGia',
+          'tongGiaTri',
+        ]);
+        const totalPrice = parseNumber(totalPriceRaw);
         const normalizedStockQuantity = Number.isNaN(stockQuantity)
           ? NaN
           : Math.trunc(stockQuantity);
-        const normalizedUnitPrice = Number.isNaN(unitPrice) ? price : unitPrice;
-        const normalizedTotalPrice = Number.isNaN(totalPrice)
-          ? normalizedUnitPrice * normalizedStockQuantity
+        const normalizedUnitPrice = unitPrice;
+        const computedTotalPrice = normalizedUnitPrice * normalizedStockQuantity;
+        const isTotalPriceBlank =
+          totalPriceRaw === undefined ||
+          totalPriceRaw === null ||
+          String(totalPriceRaw).trim() === '';
+        const shouldAutoComputeTotalPrice =
+          isTotalPriceBlank ||
+          Number.isNaN(totalPrice) ||
+          (totalPrice === 0 &&
+            normalizedUnitPrice > 0 &&
+            normalizedStockQuantity > 0);
+        const normalizedTotalPrice = shouldAutoComputeTotalPrice
+          ? computedTotalPrice
           : totalPrice;
 
         if (
           !name ||
-          Number.isNaN(price) ||
+          Number.isNaN(normalizedUnitPrice) ||
           Number.isNaN(normalizedStockQuantity)
         ) {
           failCount += 1;
@@ -350,21 +449,21 @@ const Inventory = () => {
 
   if (isLoading) {
     return (
-      <div className='w-10 h-10 border-4 border-blue-500 rounded-full animate-spin border-t-transparent'></div>
+      <div className='w-10 h-10 border-4 border-blue-500 rounded-full animate-spin border-t-transparent mx-auto'></div>
     );
   }
 
   if (isError || !products) {
     return (
       <div className='py-5 text-center text-red-500'>
-        Failed to loading Products
+        Đã xảy ra lỗi khi tìm kiếm dữ liệu
       </div>
     );
   }
 
   return (
     <div className='flex flex-col'>
-      <Header name='Inventory' />
+      <Header name='Kho hàng' />
 
       <div className='flex items-center justify-end gap-3 mt-2'>
         <input
@@ -381,7 +480,7 @@ const Inventory = () => {
           disabled={isImporting}
           className='inline-flex items-center gap-2 px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300'>
           <Upload className='w-4 h-4' />
-          {isImporting ? 'Đang import...' : 'Import Excel'}
+          {isImporting ? 'Đang tải...' : 'Tải lên tệp Excel'}
         </button>
         <button
           type='button'
@@ -389,7 +488,7 @@ const Inventory = () => {
           disabled={products.length === 0}
           className='inline-flex items-center gap-2 px-4 py-2 text-white bg-emerald-600 rounded-lg hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-emerald-300'>
           <Download className='w-4 h-4' />
-          Export Excel
+          Tải xuống tệp Excel
         </button>
       </div>
 

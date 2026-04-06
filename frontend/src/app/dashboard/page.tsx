@@ -16,8 +16,8 @@ import CardInventorySummary from './CardInventorySummary';
 
 const Dashboard = () => {
   return (
-    <div className='gap-10 pb-4 md:grid-cols-2 xl:grid-cols-3 xl:overflow-auto custom-grid-rows'>
-      {/* <CardPopularProducts /> */}
+    <div className='grid grid-cols-1 gap-10 pb-4 md:grid-cols-2  xl:overflow-auto custom-grid-rows'>
+      <CardPopularProducts />
       <CardInventorySummary />
       {/* <CardSalesSummary /> */}
       {/* <CardPurchaseSummary /> */}

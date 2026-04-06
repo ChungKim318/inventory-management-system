@@ -19,7 +19,7 @@ const CardPurchaseSummary = () => {
   return (
     <div className='flex flex-col justify-between col-span-1 row-span-2 bg-white shadow-md xl:row-span-3 md:col-span-2 xl:col-span-1 rounded-2xl'>
       {isLoading ? (
-        <div className='w-10 h-10 border-4 border-blue-500 rounded-full animate-spin border-t-transparent'></div>
+        <div className='w-10 h-10 border-4 border-blue-500 rounded-full animate-spin border-t-transparent mx-auto'></div>
       ) : (
         <>
           {/* HEADER */}

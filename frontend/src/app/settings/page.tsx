@@ -10,11 +10,11 @@ type UserSetting = {
 };
 
 const mockSettings: UserSetting[] = [
-  { label: 'Username', value: 'john_doe', type: 'text' },
-  { label: 'Email', value: 'john.doe@example.com', type: 'text' },
-  { label: 'Notification', value: true, type: 'toggle' },
+  { label: 'Tên người dùng', value: 'Kim Chung', type: 'text' },
+  { label: 'Email', value: 'chunglk@anhuco.com', type: 'text' },
+  { label: 'Thông báo', value: true, type: 'toggle' },
   { label: 'Dark Mode', value: false, type: 'toggle' },
-  { label: 'Language', value: 'English', type: 'text' },
+  { label: 'Ngôn ngữ', value: 'Tiếng Việt', type: 'text' },
 ];
 
 const Setting = () => {
@@ -27,16 +27,16 @@ const Setting = () => {
   };
   return (
     <div className='w-full'>
-      <Header name='User Settings' />
+      <Header name='Cài đặt' />
       <div className='overflow-x-auto mt-5 shadow-md'>
         <table className='min-w-full bg-white rounded-lg'>
           <thead className='bg-gray-800 text-white'>
             <tr>
               <th className='text-left py-3 px-4 uppercase font-semibold text-sm'>
-                Setting
+                Cài đặt
               </th>
               <th className='text-left py-3 px-4 uppercase font-semibold text-sm'>
-                Value
+                Nội dung
               </th>
             </tr>
           </thead>

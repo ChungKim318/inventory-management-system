@@ -97,13 +97,15 @@ const Product = () => {
   };
 
   if (isLoading) {
-    return <div className='py-4'>Loading...</div>;
+    return (
+      <div className='w-10 h-10 border-4 border-blue-500 rounded-full animate-spin border-t-transparent mx-auto'></div>
+    );
   }
 
   if (isError || !products) {
     return (
       <div className='py-4 text-center text-red-500'>
-        Failed to fetch products
+        Có lỗi xảy ra khi truy cập dữ liệu.
       </div>
     );
   }
@@ -115,7 +117,7 @@ const Product = () => {
           <SearchIcon className='w-5 h-5 text-gray-500 m-2' />
           <input
             type='text'
-            placeholder='Enter your content'
+            placeholder='Tìm kiếm sản phẩm'
             className='w-full px-5 py-3 bg-transparent border rounded-lg outline-none focus:border-blue-500 border-slate-200'
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -125,12 +127,12 @@ const Product = () => {
 
       {/* HEADER BAR */}
       <div className='flex justify-between items-center mb-6'>
-        <Header name='Products' />
+        <Header name='Sản phẩm' />
         <button
           className='flex items-center bg-blue-500 hover:bg-blue-700 text-gray-200 font-bold py-2 px-4 rounded'
           onClick={() => setIsModalOpen(true)}>
           <PlusCircleIcon className='w-5 h-5 mr-2 text-gray-200!' />
-          Create Product
+          Tạo sản phẩm
         </button>
       </div>
 
@@ -172,6 +174,7 @@ const Product = () => {
                   className='w-full h-full object-cover transition-transform duration-500 group-hover:scale-110'
                   width={300}
                   height={300}
+                  loading='eager'
                 />
                 {product?.rating && (
                   <div className='absolute bottom-2 left-2 bg-white/90 px-2 py-0.5 rounded-lg flex items-center gap-1 text-xs font-bold text-amber-500 shadow-sm'>

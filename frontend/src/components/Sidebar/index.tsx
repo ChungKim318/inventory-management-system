@@ -65,10 +65,10 @@ const SideBar = () => {
       {/* Top Logo */}
       <div
         className={`flex gap-3 justify-between md:justify-normal items-center pt-8 ${isSidebarCollapsed ? 'px-5' : 'px-8'}`}>
-        <div>Logo</div>
+        {/* <div>Logo</div> */}
         <h1
-          className={`${isSidebarCollapsed ? 'hidden' : 'block'} font-extrabold text-2xl`}>
-          Anhuco
+          className={`${isSidebarCollapsed ? 'hidden' : 'block'} font-extrabold text-2xl text-red-500 mx-auto`}>
+          ANHUCO
         </h1>
         <button
           className='md:hidden px-3 py-3 bg-gray-100 rounded-full hover:bg-blue-100'
@@ -82,44 +82,46 @@ const SideBar = () => {
         <SidebarLinks
           href='/dashboard'
           icon={Layout}
-          label='Dashboard'
+          label='Báo cáo'
           isCollapsed={isSidebarCollapsed}
         />
         <SidebarLinks
           href='/products'
           icon={Clipboard}
-          label='Products'
+          label='Sản phẩm'
           isCollapsed={isSidebarCollapsed}
         />
         <SidebarLinks
           href='/inventory'
           icon={Archive}
-          label='Inventory'
+          label='Kho hàng'
           isCollapsed={isSidebarCollapsed}
         />
-        <SidebarLinks
+        {/* <SidebarLinks
           href='/users'
           icon={User}
           label='Users'
           isCollapsed={isSidebarCollapsed}
-        />
+        /> */}
         <SidebarLinks
           href='/settings'
           icon={SlidersHorizontal}
-          label='Settings'
+          label='Cài đặt'
           isCollapsed={isSidebarCollapsed}
         />
-        <SidebarLinks
+        {/* <SidebarLinks
           href='/expenses'
           icon={CircleDollarSign}
           label='Expenses'
           isCollapsed={isSidebarCollapsed}
-        />
+        /> */}
       </div>
 
       {/* Footer */}
       <div className={`${isSidebarCollapsed ? 'hidden' : 'block'} mb-10`}>
-        <p className='text-center text-xs text-gray-500'>&Copy; 2026 Anhuco</p>
+        <p className='text-center text-xs text-gray-500'>
+          &Copy; 2026 - KIM CHUNG - BAN CNTT
+        </p>
       </div>
     </div>
   );

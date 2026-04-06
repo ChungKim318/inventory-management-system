@@ -9,11 +9,11 @@ const CardPopularProducts = () => {
   return (
     <div className='row-span-3 pb-16 bg-white shadow-md xl:row-span-6 rounded-2xl'>
       {isLoading ? (
-        <div className='w-10 h-10 border-4 border-blue-500 rounded-full animate-spin border-t-transparent'></div>
+        <div className='w-10 h-10 border-4 border-blue-500 rounded-full animate-spin border-t-transparent mx-auto'></div>
       ) : (
         <>
           <h3 className='pt-5 pb-2 text-lg font-semibold px-7'>
-            Popular Product
+            Sản phẩm tiêu biểu
           </h3>
           <hr />
           <div className='h-full overflow-auto'>
@@ -48,7 +48,7 @@ const CardPopularProducts = () => {
                   <button className='p-2 mr-2 text-blue-600 bg-blue-100 rounded-full'>
                     <ShoppingBag className='w-4 h-4' />
                   </button>
-                  {Math.round(product.stockQuantity / 1000)}k Sold
+                  {Math.round(product.stockQuantity / 1000)}k lượt mua
                 </div>
               </div>
             ))}

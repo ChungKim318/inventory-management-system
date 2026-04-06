@@ -144,7 +144,7 @@ const CreateProductModal = ({
   return (
     <div className='fixed inset-0 z-20 w-full h-full overflow-y-auto bg-black/40 bg-opacity-50 backdrop-blur-sm'>
       <div className='relative p-5 mx-auto bg-white border rounded-md shadow-lg top-8 w-140 max-w-[95vw]'>
-        <Header name='Create New Product' />
+        <Header name='Tạo sản phẩm mới' />
         <form onSubmit={handleSubmit} className='mt-5 grid grid-cols-2 gap-x-4'>
           <div className='col-span-2'>
             <label htmlFor='productId' className={labelCssStyles}>
@@ -158,6 +158,7 @@ const CreateProductModal = ({
               value={formData.productId}
               className={inputCssStyles}
               required
+              autoComplete='off'
             />
           </div>
 
@@ -173,6 +174,7 @@ const CreateProductModal = ({
               value={formData.name}
               className={inputCssStyles}
               required
+              autoComplete='off'
             />
           </div>
 
@@ -189,6 +191,7 @@ const CreateProductModal = ({
               value={stockQuantityInput}
               className={inputCssStyles}
               required
+              autoComplete='off'
             />
           </div>
 
@@ -203,6 +206,7 @@ const CreateProductModal = ({
               onChange={handleChange}
               value={formData.unitOfMeasure}
               className={inputCssStyles}
+              autoComplete='off'
             />
           </div>
 
@@ -224,6 +228,7 @@ const CreateProductModal = ({
               }
               className={inputCssStyles}
               required
+              autoComplete='off'
             />
           </div>
 
@@ -277,6 +282,7 @@ const CreateProductModal = ({
               onChange={handleChange}
               value={formData.rating}
               className={inputCssStyles}
+              autoComplete='off'
             />
           </div>
 
@@ -291,6 +297,7 @@ const CreateProductModal = ({
               onChange={handleChange}
               value={formData.imageUrl}
               className={inputCssStyles}
+              autoComplete='off'
             />
           </div>
 
