@@ -19,13 +19,7 @@ app.use(helmet.crossOriginResourcePolicy({ policy: 'cross-origin' }));
 app.use(morgan('common'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(
-  cors({
-    origin: 'https://inventory-management-system-nine-pi.vercel.app/',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials: true,
-  }),
-);
+app.use(cors());
 
 /* ROUTES */
 app.use('/dashboard', dashboardRoutes); // http://localhost:8000/dashboard
