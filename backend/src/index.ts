@@ -19,12 +19,15 @@ app.use(helmet.crossOriginResourcePolicy({ policy: 'cross-origin' }));
 app.use(morgan('common'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cors());
+app.use(
+  cors({
+    origin: '',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true,
+  }),
+);
 
 /* ROUTES */
-app.get('/hello', (req, res) => {
-  res.send('Hello, World!');
-});
 app.use('/dashboard', dashboardRoutes); // http://localhost:8000/dashboard
 app.use('/products', productRoutes); // http://localhost:8000/products
 app.use('/users', userRoutes); // http://localhost:8000/users
