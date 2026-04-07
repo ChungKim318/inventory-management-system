@@ -166,10 +166,7 @@ const Product = () => {
               {/* Product Image */}
               <div className='relative mb-4 overflow-hidden rounded-xl bg-gray-50 flex justify-center items-center h-48'>
                 <Image
-                  src={
-                    product?.imageUrl ||
-                    `https://picsum.photos/id/${index + 20}/300`
-                  }
+                  src={product?.imageUrl || `/img-default.jpg`}
                   alt={product?.name}
                   className='w-full h-full object-cover transition-transform duration-500 group-hover:scale-110'
                   width={300}

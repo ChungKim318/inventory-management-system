@@ -24,7 +24,7 @@ const CardPopularProducts = () => {
                 <div className='flex items-center gap-3'>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={product.imageUrl || 'https://picsum.photos/200'}
+                    src={product.imageUrl || '/img-default.jpg'}
                     alt={product?.name}
                     className='rounded-lg w-14 h-14 object-cover'
                   />
