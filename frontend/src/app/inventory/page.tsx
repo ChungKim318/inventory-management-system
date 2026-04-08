@@ -17,11 +17,11 @@ const columns: GridColDef[] = [
   { field: 'productId', headerName: 'Mã sản phẩm', width: 100 },
   { field: 'name', headerName: 'Tên sản phẩm', width: 170 },
   {
-    field: 'price',
-    headerName: 'Tổng giá trị',
-    width: 120,
+    field: 'unitPrice',
+    headerName: 'Đơn giá',
+    width: 150,
     valueGetter: (value, row) =>
-      `${new Intl.NumberFormat('vi-VN').format(row.totalPrice ?? row.totalPrice)} VNĐ`,
+      `${new Intl.NumberFormat('vi-VN').format(row.unitPrice)} VNĐ`,
   },
   {
     field: 'unitOfMeasure',
@@ -48,13 +48,6 @@ const columns: GridColDef[] = [
         : 'N/A',
   },
   {
-    field: 'unitPrice',
-    headerName: 'Giá một đơn vị',
-    width: 150,
-    valueGetter: (value, row) =>
-      `${new Intl.NumberFormat('vi-VN').format(row.unitPrice)} VNĐ`,
-  },
-  {
     field: 'stockQuantity',
     headerName: 'Số lượng tồn kho',
     width: 150,
@@ -69,8 +62,15 @@ const columns: GridColDef[] = [
       row.shippedQuantity ? row.shippedQuantity.toLocaleString() : 'N/A',
   },
   {
+    field: 'price',
+    headerName: 'Thành tiền',
+    width: 120,
+    valueGetter: (value, row) =>
+      `${new Intl.NumberFormat('vi-VN').format(row.totalPrice ?? row.totalPrice)} VNĐ`,
+  },
+  {
     field: 'rating',
-    headerName: 'Đánh giá',
+    headerName: 'Ghi chú',
     width: 140,
     valueGetter: (value, row) => row.rating || 'N/A',
   },
@@ -82,9 +82,7 @@ const parseNumber = (value: unknown) => {
     let normalized = value.trim();
     if (!normalized) return NaN;
 
-    normalized = normalized
-      .replace(/vnđ|vnd|đ/gi, '')
-      .replace(/\s/g, '');
+    normalized = normalized.replace(/vnđ|vnd|đ/gi, '').replace(/\s/g, '');
 
     if (normalized.includes('.') && normalized.includes(',')) {
       if (normalized.lastIndexOf(',') > normalized.lastIndexOf('.')) {
@@ -126,12 +124,12 @@ const EXCEL_HEADERS = [
   'Mã sản phẩm',
   'Tên sản phẩm',
   'Đơn giá',
-  'Đánh giá',
   'Số lượng tồn',
   'Đơn vị tính',
   'Ngày nhập kho',
   'Ngày xuất kho',
-  'Tổng giá trị',
+  'Thành tiền',
+  'Ghi chú',
 ] as const;
 
 const getCellValue = (
@@ -207,9 +205,8 @@ const Inventory = () => {
           product.productId,
           product.name,
           normalizedUnitPrice,
-          product.rating ?? '',
-          product.stockQuantity,
           product.unitOfMeasure ?? '',
+          product.stockQuantity,
           product.dateStocked
             ? new Date(product.dateStocked).toISOString().slice(0, 10)
             : '',
@@ -217,6 +214,7 @@ const Inventory = () => {
             ? new Date(product.dateShipped).toISOString().slice(0, 10)
             : '',
           product.totalPrice ?? normalizedUnitPrice * product.stockQuantity,
+          product.rating ?? '',
         ];
       });
 
@@ -229,11 +227,11 @@ const Inventory = () => {
         { wch: 20 },
         { wch: 24 },
         { wch: 14 },
-        { wch: 12 },
         { wch: 14 },
         { wch: 14 },
         { wch: 14 },
         { wch: 14 },
+        { wch: 16 },
         { wch: 16 },
       ];
 
@@ -355,7 +353,8 @@ const Inventory = () => {
           ? NaN
           : Math.trunc(stockQuantity);
         const normalizedUnitPrice = unitPrice;
-        const computedTotalPrice = normalizedUnitPrice * normalizedStockQuantity;
+        const computedTotalPrice =
+          normalizedUnitPrice * normalizedStockQuantity;
         const isTotalPriceBlank =
           totalPriceRaw === undefined ||
           totalPriceRaw === null ||
