@@ -7,12 +7,12 @@ const CardPopularProducts = () => {
   const formatVnd = (value: number) =>
     `${new Intl.NumberFormat('vi-VN').format(value)} VNĐ`;
   return (
-    <div className='row-span-3 pb-16 bg-white shadow-md xl:row-span-6 rounded-2xl'>
+    <div className='row-span-3 pb-16 bg-white dark:bg-gray-900 shadow-md xl:row-span-6 rounded-2xl border border-gray-100 dark:border-gray-800'>
       {isLoading ? (
         <div className='w-10 h-10 border-4 border-blue-500 rounded-full animate-spin border-t-transparent mx-auto'></div>
       ) : (
         <>
-          <h3 className='pt-5 pb-2 text-lg font-semibold px-7'>
+          <h3 className='pt-5 pb-2 text-lg font-semibold px-7 dark:text-gray-100'>
             Sản phẩm tiêu biểu
           </h3>
           <hr />
@@ -20,7 +20,7 @@ const CardPopularProducts = () => {
             {dashboardMetrics?.popularProducts.map((product) => (
               <div
                 key={product.productId}
-                className='flex items-center justify-between gap-3 px-5 border-b py-7'>
+                className='flex items-center justify-between gap-3 px-5 border-b border-gray-100 dark:border-gray-800 py-7'>
                 <div className='flex items-center gap-3'>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
@@ -29,7 +29,7 @@ const CardPopularProducts = () => {
                     className='rounded-lg w-14 h-14 object-cover'
                   />
                   <div className='flex flex-col justify-between gap-1'>
-                    <div className='font-bold text-gray-700'>
+                    <div className='font-bold text-gray-700 dark:text-gray-100'>
                       {product?.name}
                     </div>
                     <div className='flex items-center text-sm'>
@@ -37,7 +37,7 @@ const CardPopularProducts = () => {
                         {formatVnd(product?.unitPrice ?? product?.price)}
                       </span>
                       <span className='mx-2'>|</span>
-                      <span className='text-xs text-gray-600'>
+                      <span className='text-xs text-gray-600 dark:text-gray-400'>
                         {product?.rating || 'N/A'}
                       </span>
                     </div>
@@ -45,10 +45,12 @@ const CardPopularProducts = () => {
                 </div>
 
                 <div className='flex items-center text-xs'>
-                  <button className='p-2 mr-2 text-blue-600 bg-blue-100 rounded-full'>
+                  <button className='p-2 mr-2 text-blue-600 dark:text-blue-300 bg-blue-100 dark:bg-gray-800 rounded-full'>
                     <ShoppingBag className='w-4 h-4' />
                   </button>
-                  {Math.round(product.stockQuantity / 1000)}k lượt mua
+                  <span className='dark:text-gray-300'>
+                    {Math.round(product.stockQuantity / 1000)}k lượt mua
+                  </span>
                 </div>
               </div>
             ))}

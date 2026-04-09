@@ -44,14 +44,14 @@ const CardExpensesSummary = () => {
   const formattedTotalExpenses = totalExpenses.toFixed(2);
 
   return (
-    <div className='flex flex-col justify-between row-span-3 bg-white shadow-md rounded-2xl'>
+    <div className='flex flex-col justify-between row-span-3 bg-white dark:bg-gray-900 shadow-md rounded-2xl border border-gray-100 dark:border-gray-800'>
       {isLoading ? (
         <div className='w-10 h-10 border-4 border-blue-500 rounded-full animate-spin border-t-transparent'></div>
       ) : (
         <>
           {/* HEADER */}
           <div>
-            <h2 className='pt-5 mb-2 text-lg font-semibold px-7'>
+            <h2 className='pt-5 mb-2 text-lg font-semibold px-7 dark:text-gray-100'>
               Expense Summary
             </h2>
             <hr />
@@ -82,7 +82,7 @@ const CardExpensesSummary = () => {
                 </PieChart>
               </ResponsiveContainer>
               <div className='absolute text-center transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 basis-2/5'>
-                <span className='text-xl font-bold'>
+                <span className='text-xl font-bold dark:text-gray-100'>
                   ${formattedTotalExpenses}
                 </span>
               </div>
@@ -92,7 +92,7 @@ const CardExpensesSummary = () => {
               {expenseCategories.map((entry, index) => (
                 <li
                   key={`legend-${index}`}
-                  className='flex items-center text-xs'>
+                  className='flex items-center text-xs dark:text-gray-300'>
                   <span
                     className='w-3 h-3 mr-2 rounded-full'
                     style={{
@@ -109,7 +109,7 @@ const CardExpensesSummary = () => {
             {expenseSummary && (
               <div className='flex items-center justify-between mt-3 mb-4 px-7'>
                 <div className='pt-2'>
-                  <p className='text-sm'>
+                  <p className='text-sm dark:text-gray-300'>
                     Average:{' '}
                     <span className='font-semibold'>
                       ${expenseSummary.totalExpenses.toFixed(2)}

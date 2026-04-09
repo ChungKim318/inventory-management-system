@@ -29,12 +29,12 @@ const StatCard = ({
   const getChangeColor = (value: number) =>
     value >= 0 ? 'text-green-500' : 'text-red-500';
   return (
-    <div className='flex flex-col justify-between col-span-1 bg-white shadow-md md:row-span-1 xl:row-span-2 rounded-2xl'>
+    <div className='flex flex-col justify-between col-span-1 bg-white dark:bg-gray-900 shadow-md md:row-span-1 xl:row-span-2 rounded-2xl border border-gray-100 dark:border-gray-800'>
       {/* HEADER */}
       <div>
         <div className='flex items-center justify-between px-5 pt-4 mb-2'>
-          <h2 className='text-lg font-semibold text-gray-700'>{title}</h2>
-          <span className='text-xs text-gray-400'>{dateRange}</span>
+          <h2 className='text-lg font-semibold text-gray-700 dark:text-gray-100'>{title}</h2>
+          <span className='text-xs text-gray-400 dark:text-gray-500'>{dateRange}</span>
         </div>
         <hr />
       </div>
@@ -48,8 +48,8 @@ const StatCard = ({
           {details.map((detail, index) => (
             <React.Fragment key={index}>
               <div className='flex items-center justify-between my-4'>
-                <span className='text-gray-500'>{detail.title}</span>
-                <span className='font-bold text-gray-800'>{detail.amount}</span>
+                <span className='text-gray-500 dark:text-gray-400'>{detail.title}</span>
+                <span className='font-bold text-gray-800 dark:text-gray-100'>{detail.amount}</span>
                 <div className='flex items-center'>
                   <detail.IconComponent
                     className={`w-4 h-4 mr-1 ${getChangeColor(

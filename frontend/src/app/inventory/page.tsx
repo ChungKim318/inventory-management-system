@@ -12,6 +12,7 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { Download, Upload } from 'lucide-react';
 import React, { ChangeEvent, useMemo, useRef, useState } from 'react';
 import { toast } from 'sonner';
+import { useAppSelector } from '@/app/redux';
 
 const columns: GridColDef[] = [
   { field: 'productId', headerName: 'Mã sản phẩm', width: 100 },

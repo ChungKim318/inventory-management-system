@@ -4,14 +4,11 @@ import { useAppDispatch, useAppSelector } from '@/app/redux';
 import { setIsSidebarCollapsed } from '@/state';
 import {
   Archive,
-  CircleDollarSign,
   Clipboard,
-  Icon,
   Layout,
   LucideIcon,
   Menu,
   SlidersHorizontal,
-  User,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -36,10 +33,10 @@ const SidebarLinks = ({
   return (
     <Link href={href}>
       <div
-        className={`cursor-pointer flex items-center ${isCollapsed ? 'justify-center py-4' : 'justify-start px-8 py-4'} hover:text-blue-500 hover:bg-blue-100 gap-3 transition-colors ${isActive ? 'bg-blue-200 text-white' : ''}`}>
-        <Icon className='w-6 h-6 text-gray-700!' />
+        className={`cursor-pointer flex items-center ${isCollapsed ? 'justify-center py-4' : 'justify-start px-8 py-4'} hover:text-blue-500 dark:hover:text-blue-300 hover:bg-blue-100 dark:hover:bg-gray-800 gap-3 transition-colors ${isActive ? 'bg-blue-200 dark:bg-blue-900 text-white' : ''}`}>
+        <Icon className='w-6 h-6 text-gray-700! dark:text-gray-200' />
         <span
-          className={`${isCollapsed ? 'hidden' : 'block'} font-medium text-gray-700`}>
+          className={`${isCollapsed ? 'hidden' : 'block'} font-medium text-gray-700 dark:text-gray-200`}>
           {label}
         </span>
       </div>
@@ -58,7 +55,7 @@ const SideBar = () => {
 
   const sidebarClassName = `fixed flex flex-col ${
     isSidebarCollapsed ? 'w-0 md:w-16' : 'w-72 md:w-64'
-  } bg-white transition-all duration-300 overflow-hidden h-full shadow-md z-40`;
+  } bg-white dark:bg-gray-900 transition-all duration-300 overflow-hidden h-full shadow-md dark:shadow-gray-950 z-40 border-r border-gray-100 dark:border-gray-800`;
 
   return (
     <div className={sidebarClassName}>
@@ -71,9 +68,9 @@ const SideBar = () => {
           ANHUCO
         </h1>
         <button
-          className='md:hidden px-3 py-3 bg-gray-100 rounded-full hover:bg-blue-100'
+          className='md:hidden px-3 py-3 bg-gray-100 dark:bg-gray-800 rounded-full hover:bg-blue-100 dark:hover:bg-gray-700'
           onClick={toggleSidebar}>
-          <Menu className='w-4 h-4' />
+          <Menu className='w-4 h-4 text-gray-700 dark:text-gray-100' />
         </button>
       </div>
 
@@ -119,7 +116,7 @@ const SideBar = () => {
 
       {/* Footer */}
       <div className={`${isSidebarCollapsed ? 'hidden' : 'block'} mb-10`}>
-        <p className='text-center text-xs text-gray-500'>
+        <p className='text-center text-xs text-gray-500 dark:text-gray-400'>
           &Copy; 2026 - KIM CHUNG - BAN CNTT
         </p>
       </div>

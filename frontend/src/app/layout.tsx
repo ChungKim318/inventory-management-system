@@ -3,6 +3,7 @@ import './globals.css';
 import { manrope } from '@/utils/fonts';
 import DashboardWrapper from '@/app/dashboardWrapper';
 import { Toaster } from 'sonner';
+import { ClerkProvider } from '@clerk/nextjs';
 
 export const metadata: Metadata = {
   title: 'Quản Lý Kho Hàng',
@@ -17,8 +18,10 @@ export default function RootLayout({
   return (
     <html lang='en' className={manrope.variable}>
       <body className='flex flex-col min-h-full'>
-        <DashboardWrapper>{children}</DashboardWrapper>
-        <Toaster richColors position='top-right' />
+        <ClerkProvider>
+          <DashboardWrapper>{children}</DashboardWrapper>
+          <Toaster richColors position='top-right' />
+        </ClerkProvider>
       </body>
     </html>
   );
