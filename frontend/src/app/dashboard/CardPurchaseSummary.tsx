@@ -17,14 +17,14 @@ const CardPurchaseSummary = () => {
 
   const lastDataPoint = purchaseData[purchaseData.length - 1] || null;
   return (
-    <div className='flex flex-col justify-between col-span-1 row-span-2 bg-white shadow-md xl:row-span-3 md:col-span-2 xl:col-span-1 rounded-2xl'>
+    <div className='flex flex-col justify-between col-span-1 row-span-2 bg-white dark:bg-gray-900 shadow-md xl:row-span-3 md:col-span-2 xl:col-span-1 rounded-2xl border border-gray-100 dark:border-gray-800'>
       {isLoading ? (
         <div className='w-10 h-10 border-4 border-blue-500 rounded-full animate-spin border-t-transparent mx-auto'></div>
       ) : (
         <>
           {/* HEADER */}
           <div>
-            <h2 className='pt-5 mb-2 text-lg font-semibold px-7'>
+            <h2 className='pt-5 mb-2 text-lg font-semibold px-7 dark:text-gray-100'>
               Purchase Summary
             </h2>
             <hr />
@@ -34,9 +34,9 @@ const CardPurchaseSummary = () => {
           <div>
             {/* BODY HEADER */}
             <div className='mb-4 mt-7 px-7'>
-              <p className='text-xs text-gray-400'>Purchased</p>
+              <p className='text-xs text-gray-400 dark:text-gray-500'>Purchased</p>
               <div className='flex items-center'>
-                <p className='text-2xl font-bold'>
+                <p className='text-2xl font-bold dark:text-gray-100'>
                   {lastDataPoint
                     ? numeral(lastDataPoint.totalPurchased).format('$0.00a')
                     : '0'}

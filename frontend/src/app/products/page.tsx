@@ -113,12 +113,12 @@ const Product = () => {
     <div className='w-full pb-5 mx-auto'>
       {/* SEARCH */}
       <div className='mb-6'>
-        <div className='flex items-center border-2 border-gray-200 rounded'>
-          <SearchIcon className='w-5 h-5 text-gray-500 m-2' />
+        <div className='flex items-center border-2 border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-900'>
+          <SearchIcon className='w-5 h-5 text-gray-500 dark:text-gray-400 m-2' />
           <input
             type='text'
             placeholder='Tìm kiếm sản phẩm'
-            className='w-full px-5 py-3 bg-transparent border rounded-lg outline-none focus:border-blue-500 border-slate-200'
+            className='w-full px-5 py-3 bg-transparent border rounded-lg outline-none focus:border-blue-500 border-slate-200 dark:border-gray-700 text-gray-900 dark:text-gray-100'
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -143,28 +143,28 @@ const Product = () => {
             <div className='w-10 h-10 border-4 border-blue-500 rounded-full animate-spin border-t-transparent'></div>
           </div>
         ) : (
-          products.map((product, index) => (
+          products.map((product) => (
             <div
               key={product?.productId}
-              className='group relative bg-white border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl p-4 flex flex-col'>
+              className='group relative bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-xl dark:hover:shadow-gray-950 transition-all duration-300 rounded-2xl p-4 flex flex-col'>
               {/* Action Buttons - Chỉ hiện rõ hơn khi hover card */}
               <div className='absolute top-3 right-3 flex items-center gap-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300'>
                 <button
                   onClick={() => handleOpenEditModal(product)}
-                  className='p-1.5 bg-white/80 backdrop-blur-sm shadow-sm rounded-full text-blue-600 hover:bg-blue-50 transition-colors'
+                  className='p-1.5 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-sm rounded-full text-blue-600 dark:text-blue-300 hover:bg-blue-50 dark:hover:bg-gray-700 transition-colors'
                   title='Chỉnh sửa'>
                   <SquarePen className='w-5 h-5' />
                 </button>
                 <button
                   onClick={() => handleDeleteProduct(product)}
-                  className='p-1.5 bg-white/80 backdrop-blur-sm shadow-sm rounded-full text-red-500 hover:bg-red-50 transition-colors'
+                  className='p-1.5 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-sm rounded-full text-red-500 hover:bg-red-50 dark:hover:bg-red-900/50 transition-colors'
                   title='Xóa'>
                   <Trash2 className='w-5 h-5' />
                 </button>
               </div>
 
               {/* Product Image */}
-              <div className='relative mb-4 overflow-hidden rounded-xl bg-gray-50 flex justify-center items-center h-48'>
+              <div className='relative mb-4 overflow-hidden rounded-xl bg-gray-50 dark:bg-gray-800 flex justify-center items-center h-48'>
                 <Image
                   src={product?.imageUrl || `/img-default.jpg`}
                   alt={product?.name}
@@ -174,7 +174,7 @@ const Product = () => {
                   loading='eager'
                 />
                 {product?.rating && (
-                  <div className='absolute bottom-2 left-2 bg-white/90 px-2 py-0.5 rounded-lg flex items-center gap-1 text-xs font-bold text-amber-500 shadow-sm'>
+                  <div className='absolute bottom-2 left-2 bg-white/90 dark:bg-gray-900/90 px-2 py-0.5 rounded-lg flex items-center gap-1 text-xs font-bold text-amber-500 shadow-sm'>
                     ⭐ {product.rating}
                   </div>
                 )}
@@ -182,7 +182,7 @@ const Product = () => {
 
               {/* Product Info */}
               <div className='flex flex-col grow'>
-                <h3 className='text-md font-bold text-gray-800 line-clamp-1 mb-1 group-hover:text-blue-600 transition-colors'>
+                <h3 className='text-md font-bold text-gray-800 dark:text-gray-100 line-clamp-1 mb-1 group-hover:text-blue-600 transition-colors'>
                   {product?.name}
                 </h3>
 
@@ -190,26 +190,26 @@ const Product = () => {
                   <span className='text-lg font-extrabold text-blue-600'>
                     {formatVnd(product?.unitPrice ?? product?.price)}
                   </span>
-                  <span className='text-xs text-gray-400'>
+                  <span className='text-xs text-gray-400 dark:text-gray-500'>
                     /{product?.unitOfMeasure || 'cái'}
                   </span>
                 </div>
 
-                <div className='grid grid-cols-2 gap-2 pt-3 border-t border-gray-50 mt-auto'>
+                <div className='grid grid-cols-2 gap-2 pt-3 border-t border-gray-50 dark:border-gray-800 mt-auto'>
                   <div className='flex flex-col'>
-                    <span className='text-[10px] uppercase font-semibold text-gray-400 tracking-wider'>
+                    <span className='text-[10px] uppercase font-semibold text-gray-400 dark:text-gray-500 tracking-wider'>
                       Tồn kho
                     </span>
                     <span
-                      className={`text-sm font-medium ${product?.stockQuantity > 0 ? 'text-gray-700' : 'text-red-500'}`}>
+                      className={`text-sm font-medium ${product?.stockQuantity > 0 ? 'text-gray-700 dark:text-gray-200' : 'text-red-500'}`}>
                       {product?.stockQuantity.toLocaleString()}
                     </span>
                   </div>
                   <div className='flex flex-col text-right'>
-                    <span className='text-[10px] uppercase font-semibold text-gray-400 tracking-wider'>
+                    <span className='text-[10px] uppercase font-semibold text-gray-400 dark:text-gray-500 tracking-wider'>
                       Tổng giá trị
                     </span>
-                    <span className='text-sm font-medium text-gray-700'>
+                    <span className='text-sm font-medium text-gray-700 dark:text-gray-200'>
                       {formatVnd(product?.totalPrice)}
                     </span>
                   </div>

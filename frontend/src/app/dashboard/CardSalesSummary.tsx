@@ -41,14 +41,14 @@ const CardSalesSummary = () => {
     return <div className='m-5'>Failed to fetch data</div>;
   }
   return (
-    <div className='flex flex-col justify-between row-span-3 bg-white shadow-md xl:row-span-6 rounded-2xl'>
+    <div className='flex flex-col justify-between row-span-3 bg-white dark:bg-gray-900 shadow-md xl:row-span-6 rounded-2xl border border-gray-100 dark:border-gray-800'>
       {isLoading ? (
         <div className='w-10 h-10 border-4 border-blue-500 rounded-full animate-spin border-t-transparent'></div>
       ) : (
         <>
           {/* HEADER */}
           <div>
-            <h2 className='pt-5 mb-2 text-lg font-semibold px-7'>
+            <h2 className='pt-5 mb-2 text-lg font-semibold px-7 dark:text-gray-100'>
               Sales Summary
             </h2>
             <hr />
@@ -59,8 +59,8 @@ const CardSalesSummary = () => {
             {/* BODY HEADER */}
             <div className='flex items-center justify-between mt-5 mb-6 px-7'>
               <div className='text-lg font-medium'>
-                <p className='text-xs text-gray-400'>Value</p>
-                <span className='text-2xl font-extrabold'>
+                <p className='text-xs text-gray-400 dark:text-gray-500'>Value</p>
+                <span className='text-2xl font-extrabold dark:text-gray-100'>
                   $
                   {(totalValueSum / 1000000).toLocaleString('en', {
                     maximumFractionDigits: 2,
@@ -73,7 +73,7 @@ const CardSalesSummary = () => {
                 </span>
               </div>
               <select
-                className='p-2 bg-white border border-gray-300 rounded shadow-sm'
+                className='p-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700 rounded shadow-sm'
                 value={timeframe}
                 onChange={(e) => {
                   setTimeframe(e.target.value);

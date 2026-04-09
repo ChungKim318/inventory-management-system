@@ -93,14 +93,14 @@ const CardInventorySummary = () => {
   // const totalAmount = inventoryData.reduce((acc, item) => acc + item.amount, 0);
 
   const classNames = {
-    label: 'block text-sm font-medium text-gray-700',
+    label: 'block text-sm font-medium text-gray-700 dark:text-gray-300',
     selectInput:
-      'mt-1 block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md',
+      'mt-1 block w-full pl-3 pr-10 py-2 text-base border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md',
   };
 
   if (isLoading) {
     return (
-      <div className='flex items-center justify-center bg-white shadow rounded-lg p-4'>
+      <div className='flex items-center justify-center bg-white dark:bg-gray-900 shadow rounded-lg p-4 border border-gray-100 dark:border-gray-800'>
         <div className='w-10 h-10 border-4 border-blue-500 rounded-full animate-spin border-t-transparent'></div>
       </div>
     );
@@ -108,17 +108,17 @@ const CardInventorySummary = () => {
 
   if (isError || !productsData) {
     return (
-      <div className='text-center text-red-500 py-4 bg-white shadow rounded-lg'>
+      <div className='text-center text-red-500 py-4 bg-white dark:bg-gray-900 shadow rounded-lg border border-gray-100 dark:border-gray-800'>
         Không thể truy xuất dữ liệu
       </div>
     );
   }
 
   return (
-    <div className='row-span-3 bg-white shadow rounded-lg p-4 md:p-6 h-fit'>
+    <div className='row-span-3 bg-white dark:bg-gray-900 shadow rounded-lg p-4 md:p-6 h-fit border border-gray-100 dark:border-gray-800'>
       <div className='mb-4'>
-        <h3 className='text-lg font-semibold'>Tổng hàng hoá xuất nhập</h3>
-        <p className='text-sm text-gray-500'>
+        <h3 className='text-lg font-semibold dark:text-gray-100'>Tổng hàng hoá xuất nhập</h3>
+        <p className='text-sm text-gray-500 dark:text-gray-400'>
           Theo dõi số lượng nhập kho, xuất kho và tồn kho sản phẩm.
         </p>
       </div>
@@ -169,7 +169,7 @@ const CardInventorySummary = () => {
           </div>
         </div>
 
-        <div className='bg-gray-50 rounded-lg p-2 md:p-4'>
+        <div className='bg-gray-50 dark:bg-gray-800 rounded-lg p-2 md:p-4'>
           <ResponsiveContainer width='100%' height={280}>
             <PieChart>
               <Pie

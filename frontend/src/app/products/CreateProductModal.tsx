@@ -137,13 +137,13 @@ const CreateProductModal = ({
 
   if (!isOpen) return null;
 
-  const labelCssStyles = 'block text-sm font-medium text-gray-700';
+  const labelCssStyles = 'block text-sm font-medium text-gray-700 dark:text-gray-300';
   const inputCssStyles =
-    'block w-full mb-2 p-2 border-gray-500 border-2 rounded-md';
+    'block w-full mb-2 p-2 border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-2 rounded-md';
 
   return (
     <div className='fixed inset-0 z-20 w-full h-full overflow-y-auto bg-black/40 bg-opacity-50 backdrop-blur-sm'>
-      <div className='relative p-5 mx-auto bg-white border rounded-md shadow-lg top-8 w-140 max-w-[95vw]'>
+      <div className='relative p-5 mx-auto bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg top-8 w-140 max-w-[95vw]'>
         <Header name='Tạo sản phẩm mới' />
         <form onSubmit={handleSubmit} className='mt-5 grid grid-cols-2 gap-x-4'>
           <div className='col-span-2'>
@@ -240,7 +240,7 @@ const CreateProductModal = ({
               type='text'
               name='totalPrice'
               value={totalPriceDisplay}
-              className={`${inputCssStyles} bg-gray-100`}
+              className={`${inputCssStyles} bg-gray-100 dark:bg-gray-700`}
               readOnly
             />
           </div>

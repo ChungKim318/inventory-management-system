@@ -2,32 +2,33 @@
 
 import { useAppDispatch, useAppSelector } from '@/app/redux';
 import { setIsDarkMode, setIsSidebarCollapsed } from '@/state';
-import { Bell, Menu, Moon, Settings, Sun } from 'lucide-react';
+import { Menu, Moon, Settings, Sun } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
+import { SignInButton, UserButton, useAuth } from '@clerk/nextjs';
 
 const Navbar = () => {
+  const { isSignedIn } = useAuth();
   const dispatch = useAppDispatch();
   const isSidebarCollapsed = useAppSelector(
     (state) => state.global.isSidebarCollapsed,
   );
-
-  // const isDarkMode = useAppSelector((state) => state.global.isDarkMode);
+  const isDarkMode = useAppSelector((state) => state.global.isDarkMode);
 
   const toggleSidebar = () => {
     dispatch(setIsSidebarCollapsed(!isSidebarCollapsed));
   };
 
-  // const toggleDarkMode = () => {
-  //   dispatch(setIsDarkMode(!isDarkMode));
-  // };
+  const toggleDarkMode = () => {
+    dispatch(setIsDarkMode(!isDarkMode));
+  };
   return (
     <div className='flex justify-between items-center w-full mb-7 '>
       <div className='flex justify-between items-center gap-5'>
         <button
-          className='px-3 py-3 bg-gray-100 rounded-full hover:bg-blue-100'
+          className='px-3 py-3 bg-gray-100 dark:bg-gray-800 rounded-full hover:bg-blue-100 dark:hover:bg-gray-700 transition-colors'
           onClick={toggleSidebar}>
-          <Menu className='w-4 h-4' />
+          <Menu className='w-4 h-4 text-gray-700 dark:text-gray-100' />
         </button>
       </div>
       <div className='relative'>
@@ -42,15 +43,15 @@ const Navbar = () => {
       </div>
 
       <div className='flex justify-between items-center gap-5'>
-        {/* <div className='hidden md:flex justify-between items-center gap-5'>
+        <div className='hidden md:flex justify-between items-center gap-5'>
           <button onClick={toggleDarkMode}>
             {isDarkMode ? (
-              <Sun className='cursor-pointer text-gray-500' size={24} />
+              <Sun className='cursor-pointer text-gray-500 dark:text-yellow-300' size={24} />
             ) : (
-              <Moon className='cursor-pointer text-gray-500' size={24} />
+              <Moon className='cursor-pointer text-gray-500 dark:text-gray-300' size={24} />
             )}
           </button>
-        </div> */}
+        </div>
         {/* <div className='relative'>
           <Bell className='cursor-pointer text-gray-500' size={24} />
           <span className='absolute -top-2 -right-2 inline-flex items-center justify-center px-[0.4rem] py-1 text-xs font-semibold leading-none text-red-100 bg-red-400 rounded-full'>
@@ -63,9 +64,20 @@ const Navbar = () => {
           <span className='font-semibold'>Chung</span>
         </div> */}
       </div>
-      <Link href={'/settings'}>
-        <Settings className='cursor-pointer text-gray-500' size={24} />
-      </Link>
+      <div className='flex items-center gap-4'>
+        <Link href={'/settings'}>
+          <Settings className='cursor-pointer text-gray-500 dark:text-gray-300' size={24} />
+        </Link>
+        {isSignedIn ? (
+          <UserButton />
+        ) : (
+          <SignInButton mode='modal'>
+            <button className='px-3 py-2 text-sm rounded-md bg-blue-600 text-white hover:bg-blue-700'>
+              Sign in
+            </button>
+          </SignInButton>
+        )}
+      </div>
     </div>
   );
 };
