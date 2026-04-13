@@ -115,7 +115,7 @@ const CardInventorySummary = () => {
   }
 
   return (
-    <div className='row-span-3 bg-white dark:bg-gray-900 shadow rounded-lg p-4 md:p-6 h-fit border border-gray-100 dark:border-gray-800'>
+    <div className='bg-white dark:bg-gray-900 shadow rounded-lg p-4 md:p-6 h-fit border border-gray-100 dark:border-gray-800'>
       <div className='mb-4'>
         <h3 className='text-lg font-semibold dark:text-gray-100'>Tổng hàng hoá xuất nhập</h3>
         <p className='text-sm text-gray-500 dark:text-gray-400'>

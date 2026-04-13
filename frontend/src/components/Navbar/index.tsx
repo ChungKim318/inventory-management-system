@@ -2,7 +2,7 @@
 
 import { useAppDispatch, useAppSelector } from '@/app/redux';
 import { setIsDarkMode, setIsSidebarCollapsed } from '@/state';
-import { Menu, Moon, Settings, Sun } from 'lucide-react';
+import { Building2, Menu, Moon, Settings, Sun, Warehouse } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 import { SignInButton, UserButton, useAuth } from '@clerk/nextjs';
@@ -23,60 +23,59 @@ const Navbar = () => {
     dispatch(setIsDarkMode(!isDarkMode));
   };
   return (
-    <div className='flex justify-between items-center w-full mb-7 '>
-      <div className='flex justify-between items-center gap-5'>
-        <button
-          className='px-3 py-3 bg-gray-100 dark:bg-gray-800 rounded-full hover:bg-blue-100 dark:hover:bg-gray-700 transition-colors'
-          onClick={toggleSidebar}>
-          <Menu className='w-4 h-4 text-gray-700 dark:text-gray-100' />
-        </button>
-      </div>
-      <div className='relative'>
-        {/* <input
-          type='search'
-          placeholder='Type to search'
-          className='pl-10 pr-4 py-2 w-50 md:w-60 border-2 border-gray-300 bg-white rounded-lg focus:outline-none focus:border-blue-500'
-        /> */}
-        {/* <div className='absolute inset-y-0 pl-3 flex items-center pointer-events-none'>
-          <Bell className='text-gray-500' size={20} />
-        </div> */}
-      </div>
+    <div className='mb-7 rounded-2xl border border-slate-200/70 bg-linear-to-r from-cyan-50 via-sky-50 to-indigo-50 px-4 py-3 shadow-lg shadow-sky-100/50 backdrop-blur dark:border-slate-800 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950 dark:shadow-slate-950/40'>
+      <div className='flex flex-col gap-3 md:flex-row md:items-center md:justify-between'>
+        <div className='flex items-start gap-4 md:items-center'>
+          <button
+            className='rounded-xl border border-slate-200/70 bg-white/90 p-3 transition-colors hover:bg-sky-100 dark:border-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700'
+            onClick={toggleSidebar}>
+            <Menu className='h-4 w-4 text-slate-700 dark:text-slate-100' />
+          </button>
+          <div className='flex min-w-0 items-center gap-3'>
+            <div className='hidden rounded-xl bg-linear-to-br from-sky-500 to-indigo-600 p-2.5 text-white shadow-md sm:block'>
+              <Warehouse className='h-5 w-5' />
+            </div>
+            <div className='min-w-0'>
+              <h1 className='truncate text-lg font-extrabold tracking-tight text-slate-900 sm:text-xl dark:text-slate-100'>
+                Phần mềm quản lý kho hàng
+              </h1>
+              <p className='mt-0.5 flex items-center gap-1.5 truncate text-xs font-medium text-slate-600 dark:text-slate-400'>
+                <Building2 className='h-3.5 w-3.5' />
+                Công ty Cổ phần AN HƯNG
+              </p>
+            </div>
+          </div>
+        </div>
 
-      <div className='flex justify-between items-center gap-5'>
-        <div className='hidden md:flex justify-between items-center gap-5'>
-          <button onClick={toggleDarkMode}>
+        <div className='flex items-center justify-end gap-3'>
+          <button
+            onClick={toggleDarkMode}
+            className='inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200/70 bg-white/90 transition-colors hover:bg-sky-100 dark:border-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700'>
             {isDarkMode ? (
-              <Sun className='cursor-pointer text-gray-500 dark:text-yellow-300' size={24} />
+              <Sun className='text-amber-400' size={20} />
             ) : (
-              <Moon className='cursor-pointer text-gray-500 dark:text-gray-300' size={24} />
+              <Moon className='text-slate-600 dark:text-slate-300' size={20} />
             )}
           </button>
+
+          <Link
+            href='/settings'
+            className='inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200/70 bg-white/90 text-slate-600 transition-colors hover:bg-sky-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700'>
+            <Settings size={20} />
+          </Link>
+
+          {isSignedIn ? (
+            <div className='rounded-xl border border-slate-200/70 bg-white/90 p-1 dark:border-slate-700 dark:bg-slate-800'>
+              <UserButton />
+            </div>
+          ) : (
+            <SignInButton mode='modal'>
+              <button className='rounded-xl bg-linear-to-r from-sky-600 to-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-md transition-opacity hover:opacity-90'>
+                Sign in
+              </button>
+            </SignInButton>
+          )}
         </div>
-        {/* <div className='relative'>
-          <Bell className='cursor-pointer text-gray-500' size={24} />
-          <span className='absolute -top-2 -right-2 inline-flex items-center justify-center px-[0.4rem] py-1 text-xs font-semibold leading-none text-red-100 bg-red-400 rounded-full'>
-            3
-          </span>
-        </div> */}
-        {/* <hr className='w-0 h-7 border-solid border-l border-gray-300 mx-3' /> */}
-        {/* <div className='flex items-center gap-3 cursor-pointer'>
-          <div className='w-9 h-9'>image</div>
-          <span className='font-semibold'>Chung</span>
-        </div> */}
-      </div>
-      <div className='flex items-center gap-4'>
-        <Link href={'/settings'}>
-          <Settings className='cursor-pointer text-gray-500 dark:text-gray-300' size={24} />
-        </Link>
-        {isSignedIn ? (
-          <UserButton />
-        ) : (
-          <SignInButton mode='modal'>
-            <button className='px-3 py-2 text-sm rounded-md bg-blue-600 text-white hover:bg-blue-700'>
-              Sign in
-            </button>
-          </SignInButton>
-        )}
       </div>
     </div>
   );

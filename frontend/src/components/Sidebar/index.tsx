@@ -79,7 +79,7 @@ const SideBar = () => {
         <SidebarLinks
           href='/dashboard'
           icon={Layout}
-          label='Báo cáo'
+          label='Tổng quan'
           isCollapsed={isSidebarCollapsed}
         />
         <SidebarLinks

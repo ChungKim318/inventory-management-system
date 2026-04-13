@@ -8,8 +8,15 @@ import {
   useUpdateProductMutation,
 } from '@/state/api';
 import type { Product } from '@/state/api';
-import { PlusCircleIcon, SearchIcon, SquarePen, Trash2 } from 'lucide-react';
-import React, { useState } from 'react';
+import {
+  ChevronLeft,
+  ChevronRight,
+  PlusCircleIcon,
+  SearchIcon,
+  SquarePen,
+  Trash2,
+} from 'lucide-react';
+import React, { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 import CreateProductModal, { ProductFormData } from './CreateProductModal';
 import EditProductModal from './EditProductModal';
@@ -22,6 +29,8 @@ const formatVnd = (value?: number) => {
 
 const Product = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(12);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -36,6 +45,19 @@ const Product = () => {
   const [createProduct] = useCreateProductMutation();
   const [updateProduct] = useUpdateProductMutation();
   const [deleteProduct] = useDeleteProductMutation();
+
+  const totalItems = products?.length ?? 0;
+  const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
+  const safeCurrentPage = Math.min(currentPage, totalPages);
+  const paginatedProducts = useMemo(() => {
+    if (!products) return [];
+    const startIndex = (safeCurrentPage - 1) * pageSize;
+    return products.slice(startIndex, startIndex + pageSize);
+  }, [products, safeCurrentPage, pageSize]);
+  const startItemIndex =
+    totalItems === 0 ? 0 : (safeCurrentPage - 1) * pageSize + 1;
+  const endItemIndex = Math.min(safeCurrentPage * pageSize, totalItems);
+
   const handleCreateProduct = async (productData: ProductFormData) => {
     try {
       await createProduct(productData).unwrap();
@@ -120,7 +142,10 @@ const Product = () => {
             placeholder='Tìm kiếm sản phẩm'
             className='w-full px-5 py-3 bg-transparent border rounded-lg outline-none focus:border-blue-500 border-slate-200 dark:border-gray-700 text-gray-900 dark:text-gray-100'
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setCurrentPage(1);
+            }}
           />
         </div>
       </div>
@@ -143,7 +168,7 @@ const Product = () => {
             <div className='w-10 h-10 border-4 border-blue-500 rounded-full animate-spin border-t-transparent'></div>
           </div>
         ) : (
-          products.map((product) => (
+          paginatedProducts.map((product) => (
             <div
               key={product?.productId}
               className='group relative bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-xl dark:hover:shadow-gray-950 transition-all duration-300 rounded-2xl p-4 flex flex-col'>
@@ -236,6 +261,53 @@ const Product = () => {
             </div>
           ))
         )}
+      </div>
+
+      <div className='mt-6 flex flex-col gap-3 rounded-xl border border-gray-200 bg-white px-4 py-3 dark:border-gray-800 dark:bg-gray-900 md:flex-row md:items-center md:justify-between'>
+        <p className='text-sm text-gray-600 dark:text-gray-300'>
+          Hiển thị {startItemIndex}-{endItemIndex} / {totalItems} sản phẩm
+        </p>
+
+        <div className='flex flex-wrap items-center gap-3'>
+          <label className='flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300'>
+            <span>Mỗi trang</span>
+            <select
+              value={pageSize}
+              onChange={(e) => {
+                setPageSize(Number(e.target.value));
+                setCurrentPage(1);
+              }}
+              className='rounded-md border border-gray-300 bg-white px-2 py-1 text-sm outline-none focus:border-blue-500 dark:border-gray-700 dark:bg-gray-800'>
+              {[8, 12, 16, 24].map((size) => (
+                <option key={size} value={size}>
+                  {size}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <div className='flex items-center gap-2'>
+            <button
+              type='button'
+              onClick={() => setCurrentPage(Math.max(1, safeCurrentPage - 1))}
+              disabled={safeCurrentPage <= 1}
+              className='inline-flex items-center gap-1 rounded-md border border-gray-300 px-3 py-1.5 text-sm text-gray-700 transition-colors hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800'>
+              <ChevronLeft className='h-4 w-4' />
+              Trước
+            </button>
+            <span className='text-sm font-medium text-gray-700 dark:text-gray-200'>
+              {safeCurrentPage}/{totalPages}
+            </span>
+            <button
+              type='button'
+              onClick={() => setCurrentPage(Math.min(totalPages, safeCurrentPage + 1))}
+              disabled={safeCurrentPage >= totalPages}
+              className='inline-flex items-center gap-1 rounded-md border border-gray-300 px-3 py-1.5 text-sm text-gray-700 transition-colors hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800'>
+              Sau
+              <ChevronRight className='h-4 w-4' />
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* MODAL CREATE PRODUCT */}

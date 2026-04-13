@@ -7,7 +7,7 @@ const CardPopularProducts = () => {
   const formatVnd = (value: number) =>
     `${new Intl.NumberFormat('vi-VN').format(value)} VNĐ`;
   return (
-    <div className='row-span-3 pb-16 bg-white dark:bg-gray-900 shadow-md xl:row-span-6 rounded-2xl border border-gray-100 dark:border-gray-800'>
+    <div className='row-span-3 pb-16 bg-white dark:bg-gray-900 shadow-md xl:row-span-6 rounded-2xl border border-gray-100 dark:border-gray-800 h-fit'>
       {isLoading ? (
         <div className='w-10 h-10 border-4 border-blue-500 rounded-full animate-spin border-t-transparent mx-auto'></div>
       ) : (

@@ -52,6 +52,7 @@ const EditProductModal = ({
         (product?.stockQuantity ?? 0),
   });
   const [shipQuantity, setShipQuantity] = useState(0);
+  const [unitPriceInput, setUnitPriceInput] = useState('');
 
   const unitPriceDisplay = useMemo(
     () => formatVnd(formData.unitPrice),
@@ -76,19 +77,12 @@ const EditProductModal = ({
     }
 
     if (name === 'unitPrice') {
-      const unitPrice = parseVnd(value);
+      const raw = value.replace(/[^\d]/g, '');
+      setUnitPriceInput(raw);
+      const unitPrice = parseVnd(raw);
       setFormData((prev) => {
         const totalPrice = unitPrice * prev.stockQuantity;
         return { ...prev, unitPrice, price: unitPrice, totalPrice };
-      });
-      return;
-    }
-
-    if (name === 'stockQuantity') {
-      const stockQuantity = Math.max(0, Math.trunc(Number(value) || 0));
-      setFormData((prev) => {
-        const totalPrice = stockQuantity * prev.unitPrice;
-        return { ...prev, stockQuantity, totalPrice };
       });
       return;
     }
@@ -97,6 +91,20 @@ const EditProductModal = ({
       ...prev,
       [name]: value,
     }));
+  };
+
+  const handleUnitPriceFocus = () => {
+    if (formData.unitPrice > 0) {
+      setUnitPriceInput(String(formData.unitPrice));
+    }
+  };
+
+  const handleUnitPriceBlur = () => {
+    if (formData.unitPrice > 0) {
+      setUnitPriceInput(formatVnd(formData.unitPrice));
+    } else {
+      setUnitPriceInput('');
+    }
   };
 
   const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
@@ -130,7 +138,8 @@ const EditProductModal = ({
 
   if (!isOpen || !product) return null;
 
-  const labelCssStyles = 'block text-sm font-medium text-gray-700 dark:text-gray-300';
+  const labelCssStyles =
+    'block text-sm font-medium text-gray-700 dark:text-gray-300';
   const inputCssStyles =
     'block w-full mb-2 p-2 border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-2 rounded-md';
 
@@ -140,7 +149,9 @@ const EditProductModal = ({
         <div className='flex justify-between items-center'>
           <Header name='Cập nhật sản phẩm' />
           <div className='flex items-center'>
-            <p className='text-2xl font-semibold dark:text-gray-100'>Tồn sau xuất:&nbsp;</p>
+            <p className='text-2xl font-semibold dark:text-gray-100'>
+              Tồn sau xuất:&nbsp;
+            </p>
             <span className='text-2xl font-semibold text-blue-600'>
               {remainingStock < 0 ? 0 : remainingStock}
             </span>
@@ -215,9 +226,15 @@ const EditProductModal = ({
             </label>
             <input
               type='text'
+              inputMode='numeric'
               name='unitPrice'
               onChange={handleChange}
-              value={unitPriceDisplay}
+              onFocus={handleUnitPriceFocus}
+              onBlur={handleUnitPriceBlur}
+              value={
+                unitPriceInput ||
+                (formData.unitPrice > 0 ? unitPriceDisplay : '')
+              }
               className={inputCssStyles}
               required
               autoComplete='off'

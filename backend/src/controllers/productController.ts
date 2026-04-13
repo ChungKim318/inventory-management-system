@@ -11,7 +11,48 @@ const parseOptionalNumber = (value: unknown): number | undefined => {
 
 const parseOptionalDate = (value: unknown): Date | undefined => {
   if (value === null || value === undefined || value === '') return undefined;
-  const date = new Date(String(value));
+
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    const excelEpochOffset = 25569;
+    const msPerDay = 86_400_000;
+    const utcMs = Math.round((value - excelEpochOffset) * msPerDay);
+    const excelDate = new Date(utcMs);
+    return Number.isNaN(excelDate.getTime()) ? undefined : excelDate;
+  }
+
+  const raw = String(value).trim();
+  if (!raw) return undefined;
+
+  const normalized = raw.replace(/\./g, '/').replace(/-/g, '/');
+  const ddmmyyMatch = normalized.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2}|\d{4})$/);
+  if (ddmmyyMatch) {
+    const [, dayRaw = '', monthRaw = '', yearRaw = ''] = ddmmyyMatch;
+    const day = Number(dayRaw);
+    const month = Number(monthRaw);
+    const rawYear = Number(yearRaw);
+    const year = yearRaw.length === 2 ? 2000 + rawYear : rawYear;
+    const parsedDate = new Date(Date.UTC(year, month - 1, day, 12));
+
+    if (
+      parsedDate.getUTCFullYear() === year &&
+      parsedDate.getUTCMonth() === month - 1 &&
+      parsedDate.getUTCDate() === day
+    ) {
+      return parsedDate;
+    }
+    return undefined;
+  }
+
+  const numericValue = Number(raw);
+  if (Number.isFinite(numericValue)) {
+    const excelEpochOffset = 25569;
+    const msPerDay = 86_400_000;
+    const utcMs = Math.round((numericValue - excelEpochOffset) * msPerDay);
+    const excelDate = new Date(utcMs);
+    return Number.isNaN(excelDate.getTime()) ? undefined : excelDate;
+  }
+
+  const date = new Date(raw);
   return Number.isNaN(date.getTime()) ? undefined : date;
 };
 

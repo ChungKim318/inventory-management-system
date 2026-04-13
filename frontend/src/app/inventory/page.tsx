@@ -206,8 +206,8 @@ const Inventory = () => {
           product.productId,
           product.name,
           normalizedUnitPrice,
-          product.unitOfMeasure ?? '',
           product.stockQuantity,
+          product.unitOfMeasure ?? '',
           product.dateStocked
             ? new Date(product.dateStocked).toISOString().slice(0, 10)
             : '',

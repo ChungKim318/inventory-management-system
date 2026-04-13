@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useGetDashboardMetricsQuery } from '@/state/api';
+import React, { useMemo } from 'react';
+import { useGetProductsQuery } from '@/state/api';
 import { TrendingUp } from 'lucide-react';
 import {
   Bar,
@@ -11,130 +11,103 @@ import {
   YAxis,
 } from 'recharts';
 
+const truncateName = (name: string) =>
+  name.length > 14 ? `${name.slice(0, 14)}...` : name;
+
 const CardSalesSummary = () => {
-  const { data, isLoading, isError } = useGetDashboardMetricsQuery();
-  const salesData = data?.salesSummary || [];
+  const { data: products, isLoading, isError } = useGetProductsQuery();
 
-  const [timeframe, setTimeframe] = useState('weekly');
+  const chartData = useMemo(() => {
+    return (products ?? [])
+      .map((product) => ({
+        name: truncateName(product.name),
+        fullName: product.name,
+        exportedQuantity: product.shippedQuantity ?? 0,
+      }))
+      .sort((a, b) => b.exportedQuantity - a.exportedQuantity)
+      .slice(0, 8);
+  }, [products]);
 
-  const totalValueSum =
-    salesData.reduce((acc, curr) => acc + curr.totalValue, 0) || 0;
-
-  const averageChangePercentage =
-    salesData.reduce((acc, curr, _, array) => {
-      return acc + curr.changePercentage! / array.length;
-    }, 0) || 0;
-
-  const highestValueData = salesData.reduce((acc, curr) => {
-    return acc.totalValue > curr.totalValue ? acc : curr;
-  }, salesData[0] || {});
-
-  const highestValueDate = highestValueData.date
-    ? new Date(highestValueData.date).toLocaleDateString('en-US', {
-        month: 'numeric',
-        day: 'numeric',
-        year: '2-digit',
-      })
-    : 'N/A';
+  const totalExportedQuantity = chartData.reduce(
+    (sum, item) => sum + item.exportedQuantity,
+    0,
+  );
+  const averageExportedQuantity =
+    chartData.length > 0 ? totalExportedQuantity / chartData.length : 0;
 
   if (isError) {
     return <div className='m-5'>Failed to fetch data</div>;
   }
+
   return (
-    <div className='flex flex-col justify-between row-span-3 bg-white dark:bg-gray-900 shadow-md xl:row-span-6 rounded-2xl border border-gray-100 dark:border-gray-800'>
+    <div className='flex flex-col justify-between bg-white dark:bg-gray-900 shadow-md rounded-2xl border border-gray-100 dark:border-gray-800'>
       {isLoading ? (
-        <div className='w-10 h-10 border-4 border-blue-500 rounded-full animate-spin border-t-transparent'></div>
+        <div className='w-10 h-10 border-4 border-blue-500 rounded-full animate-spin border-t-transparent mx-auto'></div>
       ) : (
         <>
-          {/* HEADER */}
           <div>
             <h2 className='pt-5 mb-2 text-lg font-semibold px-7 dark:text-gray-100'>
-              Sales Summary
+              Tình trạng xuất kho
             </h2>
             <hr />
           </div>
 
-          {/* BODY */}
           <div>
-            {/* BODY HEADER */}
-            <div className='flex items-center justify-between mt-5 mb-6 px-7'>
-              <div className='text-lg font-medium'>
-                <p className='text-xs text-gray-400 dark:text-gray-500'>Value</p>
+            <div className='flex items-end justify-between mt-5 mb-6 px-7'>
+              <div>
+                <p className='text-xs text-gray-400 dark:text-gray-500'>
+                  Tổng số lượng đã xuất (Top 8 sản phẩm)
+                </p>
                 <span className='text-2xl font-extrabold dark:text-gray-100'>
-                  $
-                  {(totalValueSum / 1000000).toLocaleString('en', {
-                    maximumFractionDigits: 2,
-                  })}
-                  m
+                  {totalExportedQuantity.toLocaleString('vi-VN')}
                 </span>
                 <span className='ml-2 text-sm text-green-500'>
                   <TrendingUp className='inline w-4 h-4 mr-1' />
-                  {averageChangePercentage.toFixed(2)}%
+                  TB {averageExportedQuantity.toFixed(1)}
                 </span>
               </div>
-              <select
-                className='p-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700 rounded shadow-sm'
-                value={timeframe}
-                onChange={(e) => {
-                  setTimeframe(e.target.value);
-                }}>
-                <option value='daily'>Daily</option>
-                <option value='weekly'>Weekly</option>
-                <option value='monthly'>Monthly</option>
-              </select>
             </div>
-            {/* CHART */}
+
             <ResponsiveContainer width='100%' height={350} className='px-7'>
               <BarChart
-                data={salesData}
-                margin={{ top: 0, right: 0, left: -25, bottom: 0 }}>
-                <CartesianGrid strokeDasharray='' vertical={false} />
-                <XAxis
-                  dataKey='date'
-                  tickFormatter={(value) => {
-                    const date = new Date(value);
-                    return `${date.getMonth() + 1}/${date.getDate()}`;
-                  }}
-                />
+                data={chartData}
+                margin={{ top: 0, right: 0, left: -20, bottom: 12 }}>
+                <CartesianGrid strokeDasharray='3 3' vertical={false} />
+                <XAxis dataKey='name' tick={{ fontSize: 12 }} interval={0} />
                 <YAxis
-                  tickFormatter={(value) => {
-                    return `$${(value / 1000000).toFixed(0)}m`;
-                  }}
-                  tick={{ fontSize: 12, dx: -1 }}
+                  tickFormatter={(value) => Number(value).toLocaleString('vi-VN')}
+                  tick={{ fontSize: 12 }}
                   tickLine={false}
                   axisLine={false}
                 />
                 <Tooltip
                   formatter={(value) => [
-                    `$${Number(value || 0).toLocaleString('en')}`,
+                    `${Number(value || 0).toLocaleString('vi-VN')} sản phẩm`,
+                    'Đã xuất',
                   ]}
-                  labelFormatter={(label) => {
-                    const date = new Date(label);
-                    return date.toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                    });
-                  }}
+                  labelFormatter={(_, payload) =>
+                    payload?.[0]?.payload?.fullName ?? 'Sản phẩm'
+                  }
                 />
                 <Bar
-                  dataKey='totalValue'
-                  fill='#3182ce'
-                  barSize={10}
-                  radius={[10, 10, 0, 0]}
+                  dataKey='exportedQuantity'
+                  fill='#2563eb'
+                  barSize={18}
+                  radius={[8, 8, 0, 0]}
                 />
               </BarChart>
             </ResponsiveContainer>
           </div>
 
-          {/* FOOTER */}
           <div>
             <hr />
-            <div className='flex items-center justify-between mt-6 mb-4 text-sm px-7'>
-              <p>{salesData.length || 0} days</p>
-              <p className='text-sm'>
-                Highest Sales Date:{' '}
-                <span className='font-bold'>{highestValueDate}</span>
+            <div className='flex items-center justify-between mt-6 mb-4 text-sm px-7 text-gray-600 dark:text-gray-300'>
+              <p>{chartData.length} sản phẩm trong biểu đồ</p>
+              <p>
+                Sản phẩm xuất nhiều nhất:{' '}
+                <span className='font-semibold'>
+                  {chartData[0]?.fullName ?? 'N/A'}
+                </span>
               </p>
             </div>
           </div>
