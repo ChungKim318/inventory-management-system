@@ -36,7 +36,7 @@ const Navbar = () => {
               <Warehouse className='h-5 w-5' />
             </div>
             <div className='min-w-0'>
-              <h1 className='truncate text-lg font-extrabold tracking-tight text-slate-900 sm:text-xl dark:text-slate-100'>
+              <h1 className='truncate text-lg font-extrabold tracking-tight sm:text-xl dark:text-slate-100 bg-linear-to-r from-sky-400 via-blue-500 to-indigo-600 bg-clip-text text-transparent'>
                 Phần mềm quản lý kho hàng
               </h1>
               <p className='mt-0.5 flex items-center gap-1.5 truncate text-xs font-medium text-slate-600 dark:text-slate-400'>

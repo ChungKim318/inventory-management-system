@@ -85,13 +85,13 @@ const SideBar = () => {
         <SidebarLinks
           href='/products'
           icon={Clipboard}
-          label='Sản phẩm'
+          label='Danh mục VTHH'
           isCollapsed={isSidebarCollapsed}
         />
         <SidebarLinks
           href='/inventory'
           icon={Archive}
-          label='Kho hàng'
+          label='Quản lý kho'
           isCollapsed={isSidebarCollapsed}
         />
         {/* <SidebarLinks
