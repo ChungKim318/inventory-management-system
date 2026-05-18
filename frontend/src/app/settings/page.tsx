@@ -42,8 +42,12 @@ const Setting = () => {
           </thead>
           <tbody>
             {userSettings.map((setting, index) => (
-              <tr className='hover:bg-blue-50 dark:hover:bg-gray-800' key={setting.label}>
-                <td className='py-2 px-4 dark:text-gray-200'>{setting.label}</td>
+              <tr
+                className='hover:bg-blue-50 dark:hover:bg-gray-800'
+                key={setting.label}>
+                <td className='py-2 px-4 dark:text-gray-200'>
+                  {setting.label}
+                </td>
                 <td className='py-2 px-4'>
                   {setting.type === 'toggle' ? (
                     <label className='inline-flex relative items-center cursor-pointer'>
